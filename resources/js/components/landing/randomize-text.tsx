@@ -48,10 +48,14 @@ export default function RandomizeText({ text, className = '' }: RandomizeTextPro
 
     return (
         <div className="relative-container">
-            <span className={`${className} ${isRandomizing ? 'text-white' : 'text-white'} z-10`}>
+            <span className={`${className} ${isRandomizing ? 'text-white' : 'text-white'}`}
+                    style={{ zIndex: '10' }}
+            >
                 {displayText}
             </span>
-            <span className={`${className} outlined-text  z-30`}>
+            <span className={`${className} outlined-text`}
+                style={{ zIndex: '20' }}
+            >
                 {displayText}
             </span>
         </div>

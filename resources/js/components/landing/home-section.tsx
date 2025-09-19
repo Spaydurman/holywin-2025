@@ -7,32 +7,29 @@ interface HomeSectionProps {
 }
 
 export default function HomeSection({ activeSection }: HomeSectionProps) {
-    const [displayText, setDisplayText] = useState('CLARK VELASCO');
+    const [displayText, setDisplayText] = useState('CTRL ALT');
     const [arrows, setArrows] = useState<Array<{id: number, left: number, delay: number}>>([]);
 
     // Switch between "HOLYWIN" and "LEVEL UP" every 10 seconds
     useEffect(() => {
         const textSwitchInterval = setInterval(() => {
-            setDisplayText(prev => prev === 'CLARK VELASCO' ? 'LEVEL UP' : 'CLARK VELASCO');
+            setDisplayText(prev => prev === 'CTRL ALT' ? 'LEVEL UP' : 'CTRL ALT');
         }, 5000);
 
         return () => clearInterval(textSwitchInterval);
     }, []);
 
-    // Create and manage halftone arrows
     useEffect(() => {
-        // Initialize arrows
-        const initialArrows = Array.from({ length: 25 }, (_, i) => ({
+        const initialArrows = Array.from({ length: 20 }, (_, i) => ({
             id: i,
             left: Math.random() * 100,
             delay: Math.random() * 5000
         }));
         setArrows(initialArrows);
 
-        // Add new arrows periodically
         const arrowInterval = setInterval(() => {
             setArrows(prev => {
-                // Remove the oldest arrow and add a new one
+
                 const newArrows = [...prev.slice(1)];
                 newArrows.push({
                     id: Date.now(),
@@ -50,7 +47,7 @@ export default function HomeSection({ activeSection }: HomeSectionProps) {
         <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-gradient-to-b from-[#001636] to-[#000B1B] relative overflow-hidden">
             {/* Halftone arrows */}
 
-            <div className="z-20">
+            <div className="">
                 {(activeSection === 'home' || activeSection === undefined) && arrows.map(arrow => (
                     <HalftoneArrow
                         key={arrow.id}
@@ -60,7 +57,7 @@ export default function HomeSection({ activeSection }: HomeSectionProps) {
                 ))}
             </div>
 
-            <div className="max-w-9xl w-full text-center z-10">
+            <div className="max-w-9xl w-full text-center">
                 {/* Randomizing title that switches between HOLYWIN and LEVEL UP */}
 
                 <div className="relative mb-8 space-mono ">

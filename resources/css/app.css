@@ -335,7 +335,7 @@
 
 .halftone-arrow {
     pointer-events: none;
-    z-index: 0;
+    z-index: 15;
 }
 
 .outlined-text {
@@ -343,8 +343,8 @@
     top: 0;
     left: 0;
     color: transparent;
-    -webkit-text-stroke: 6px rgb(187, 57, 57);
-    text-stroke: 6px rgb(209, 33, 33);
+    -webkit-text-stroke: 2px rgb(255, 255, 255);
+    text-stroke: 2px rgb(255, 255, 255);
     /* z-index: 1000; */
     pointer-events: none;
 }

@@ -13,14 +13,8 @@ export default function HalftoneArrow({ delay = 0, leftPosition = 0 }: HalftoneA
         // Randomly select animation class
         const animations = [
             'animate-float',
-            'animate-float-diagonal',
-            'animate-float-diagonal-reverse',
             'animate-float-to-top',
-            'animate-float-diagonal-to-top',
-            'animate-float-diagonal-reverse-to-top',
             'animate-float-short',
-            'animate-float-diagonal-short',
-            'animate-float-diagonal-reverse-short'
         ];
         const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
         setAnimationClass(randomAnimation);
@@ -48,7 +42,6 @@ export default function HalftoneArrow({ delay = 0, leftPosition = 0 }: HalftoneA
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                className='z-10'
             >
                 <path d="m17 11-5-5-5 5"/>
                 <path d="m17 18-5-5-5 5"/>
