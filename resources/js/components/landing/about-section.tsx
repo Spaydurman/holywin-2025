@@ -1,5 +1,6 @@
 
 import TextType from "../ui/text-type";
+import PixelTransition from "../ui/pixel-transition";
 export default function AboutSection() {
 
 
@@ -9,20 +10,46 @@ export default function AboutSection() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
                     <div>
-                        <h3 className="text-2xl font-semibold mb-4">Our Story</h3>
-                        <p className="text-muted-foreground mb-4">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris.
-                            Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus
-                            rhoncus ut eleifend nibh porttitor.
-                        </p>
-                        <p className="text-muted-foreground mb-4">
-                            Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl
-                            tempor. Suspendisse dictum feugiat nisl ut dapibus. Mauris iaculis porttitor.
-                        </p>
+                        <PixelTransition
+                            contents={[
+                                <img
+                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/1200px-Cat03.jpg"
+                                alt="Cat 1"
+                                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                />,
+                                <img
+                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cat_November_2010-1a.jpg/1200px-Cat_November_2010-1a.jpg"
+                                alt="Cat 2"
+                                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                />,
+                                <img
+                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Cat_poster_1.jpg/1200px-Cat_poster_1.jpg"
+                                alt="Cat 3"
+                                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                />,
+                                <div
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    display: "grid",
+                                    placeItems: "center",
+                                    backgroundColor: "#111"
+                                }}
+                                >
+                                <p style={{ fontWeight: 900, fontSize: "3rem", color: "#ffffff" }}>Meow!</p>
+                                </div>
+                            ]}
+                            gridSize={12}
+                            pixelColor='#ffffff'
+                            animationStepDuration={0.4}
+                            cycleInterval={2000}
+                            autoCycle={true}
+                            className="custom-pixel-card"
+                        />
                     </div>
 
                     <div>
-                        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 vt323">About Us</h2>
+                        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 vt323">About Meow</h2>
                             <TextType
                                 text={[
                                     "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
