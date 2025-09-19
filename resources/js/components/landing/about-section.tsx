@@ -13,19 +13,19 @@ export default function AboutSection() {
                         <PixelTransition
                             contents={[
                                 <img
-                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/1200px-Cat03.jpg"
-                                alt="Cat 1"
-                                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/1200px-Cat03.jpg"
+                                    alt="Cat 1"
+                                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
                                 />,
                                 <img
-                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cat_November_2010-1a.jpg/1200px-Cat_November_2010-1a.jpg"
-                                alt="Cat 2"
-                                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cat_November_2010-1a.jpg/1200px-Cat_November_2010-1a.jpg"
+                                    alt="Cat 2"
+                                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
                                 />,
                                 <img
-                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Cat_poster_1.jpg/1200px-Cat_poster_1.jpg"
-                                alt="Cat 3"
-                                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Cat_poster_1.jpg/1200px-Cat_poster_1.jpg"
+                                    alt="Cat 3"
+                                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
                                 />,
                                 <div
                                 style={{
