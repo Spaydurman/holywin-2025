@@ -8,9 +8,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 interface FormData {
     name: string;
     email: string;
-    plan: string;
-    message: string;
-    terms: boolean;
+    birthday: string;
+    age: string;
+    invitedBy: string;
 }
 
 interface RegistrationSectionProps {
@@ -21,23 +21,15 @@ export default function RegistrationSection({ onNavigate }: RegistrationSectionP
     const [formData, setFormData] = useState<FormData>({
         name: '',
         email: '',
-        plan: 'free',
-        message: '',
-        terms: false
+        birthday: '',
+        age: '',
+        invitedBy: ''
     });
 
-    const [errors, setErrors] = useState<{name?: string; email?: string; terms?: string}>({});
+    const [errors, setErrors] = useState<{name?: string; email?: string; birthday?: string; age?: string; invitedBy?: string}>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitSuccess, setSubmitSuccess] = useState(false);
 
-    // Pre-select a plan if one was selected in the details section
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const selectedPlan = urlParams.get('plan');
-        if (selectedPlan && ['free', 'standard', 'premium'].includes(selectedPlan)) {
-            setFormData(prev => ({ ...prev, plan: selectedPlan }));
-        }
-    }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -48,37 +40,76 @@ export default function RegistrationSection({ onNavigate }: RegistrationSectionP
             setErrors(prev => ({ ...prev, name: undefined }));
         } else if (name === 'email' && errors.email) {
             setErrors(prev => ({ ...prev, email: undefined }));
+        } else if (name === 'birthday' && errors.birthday) {
+            setErrors(prev => ({ ...prev, birthday: undefined }));
+        } else if (name === 'age' && errors.age) {
+            setErrors(prev => ({ ...prev, age: undefined }));
+        } else if (name === 'invitedBy' && errors.invitedBy) {
+            setErrors(prev => ({ ...prev, invitedBy: undefined }));
         }
-    };
-
-    const handleCheckboxChange = (checked: boolean) => {
-        setFormData(prev => ({ ...prev, terms: checked }));
-
-        // Clear error when checkbox is checked
-        if (checked && errors.terms) {
-            setErrors(prev => ({ ...prev, terms: undefined }));
-        }
-    };
-
-    const handlePlanChange = (planId: string) => {
-        setFormData(prev => ({ ...prev, plan: planId }));
     };
 
     const validateForm = (): boolean => {
-        const newErrors: {name?: string; email?: string; terms?: string} = {};
+        const newErrors: {name?: string; email?: string; birthday?: string; age?: string; invitedBy?: string} = {};
 
         if (!formData.name.trim()) {
-            newErrors.name = 'Name is required';
+            newErrors.name = 'Full name is required';
+        } else if (formData.name.trim().length < 2) {
+            newErrors.name = 'Full name must be at least 2 characters';
         }
 
         if (!formData.email.trim()) {
-            newErrors.email = 'Email is required';
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            newErrors.email = 'Email is invalid';
+            newErrors.email = 'Email address is required';
+        } else {
+            // More robust email validation regex
+            const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+            if (!emailRegex.test(formData.email)) {
+                newErrors.email = 'Please enter a valid email address';
+            }
         }
 
-        if (!formData.terms) {
-            newErrors.terms = 'You must agree to the terms and conditions';
+        if (!formData.birthday) {
+            newErrors.birthday = 'Birthday is required';
+        } else {
+            // Validate birthday format (YYYY-MM-DD)
+            const birthdayRegex = /^\d{4}-\d{2}-\d{2}$/;
+            if (!birthdayRegex.test(formData.birthday)) {
+                newErrors.birthday = 'Birthday must be in YYYY-MM-DD format';
+            } else {
+                // Check if birthday is a valid date and not in the future
+                const birthdayDate = new Date(formData.birthday);
+                const today = new Date();
+                if (isNaN(birthdayDate.getTime())) {
+                    newErrors.birthday = 'Please enter a valid date';
+                } else if (birthdayDate > today) {
+                    newErrors.birthday = 'Birthday cannot be in the future';
+                } else if (today.getFullYear() - birthdayDate.getFullYear() > 120) {
+                    newErrors.birthday = 'Please enter a realistic birthday';
+                }
+            }
+        }
+
+        if (!formData.age) {
+            newErrors.age = 'Age is required';
+        } else {
+            // Validate age is a number between 1 and 120
+            // First check if the input contains only numbers
+            if (!/^\d+$/.test(formData.age)) {
+                newErrors.age = 'Age must be a whole number';
+            } else {
+                const ageNum = parseInt(formData.age, 10);
+                if (ageNum < 1) {
+                    newErrors.age = 'Age must be at least 1';
+                } else if (ageNum > 120) {
+                    newErrors.age = 'Age must be 120 or less';
+                }
+            }
+        }
+
+        if (!formData.invitedBy.trim()) {
+            newErrors.invitedBy = 'Please enter the name of the person who invited you';
+        } else if (formData.invitedBy.trim().length < 2) {
+            newErrors.invitedBy = 'Invited by name must be at least 2 characters';
         }
 
         setErrors(newErrors);
@@ -102,9 +133,9 @@ export default function RegistrationSection({ onNavigate }: RegistrationSectionP
                     setFormData({
                         name: '',
                         email: '',
-                        plan: 'free',
-                        message: '',
-                        terms: false
+                        birthday: '',
+                        age: '',
+                        invitedBy: ''
                     });
                     setSubmitSuccess(false);
                 }, 3000);
@@ -165,67 +196,51 @@ export default function RegistrationSection({ onNavigate }: RegistrationSectionP
                                         />
                                         {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
                                     </div>
-                                </div>
 
-                                <div className="space-y-2">
-                                    <Label>Choose Plan</Label>
-                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                        {['free', 'standard', 'premium'].map((plan) => (
-                                            <div
-                                                key={plan}
-                                                className={`border rounded-lg p-4 cursor-pointer transition-all ${
-                                                    formData.plan === plan
-                                                        ? 'border-primary bg-primary/10'
-                                                        : 'border-muted-foreground hover:border-primary'
-                                                }`}
-                                                onClick={() => handlePlanChange(plan)}
-                                            >
-                                                <div className="flex items-center">
-                                                    <div className={`w-4 h-4 rounded-full border mr-2 ${
-                                                        formData.plan === plan
-                                                            ? 'bg-primary border-primary'
-                                                            : 'border-muted-foreground'
-                                                    }`}>
-                                                        {formData.plan === plan && (
-                                                            <div className="w-2 h-2 bg-white rounded-full m-0.5"></div>
-                                                        )}
-                                                    </div>
-                                                    <span className="capitalize font-medium">{plan}</span>
-                                                </div>
-                                            </div>
-                                        ))}
+                                    <div className="space-y-2">
+                                        <Label htmlFor="birthday">Birthday</Label>
+                                        <Input
+                                            id="birthday"
+                                            name="birthday"
+                                            type="date"
+                                            value={formData.birthday}
+                                            onChange={handleInputChange}
+                                            className={errors.birthday ? 'border-red-500' : ''}
+                                        />
+                                        {errors.birthday && <p className="text-red-500 text-sm">{errors.birthday}</p>}
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label htmlFor="age">Age</Label>
+                                        <Input
+                                            id="age"
+                                            name="age"
+                                            type="number"
+                                            min="1"
+                                            max="120"
+                                            value={formData.age}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter your age"
+                                            className={errors.age ? 'border-red-500' : ''}
+                                        />
+                                        {errors.age && <p className="text-red-500 text-sm">{errors.age}</p>}
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label htmlFor="invitedBy">Invited By</Label>
+                                        <Input
+                                            id="invitedBy"
+                                            name="invitedBy"
+                                            value={formData.invitedBy}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter the name of the person who invited you"
+                                            className={errors.invitedBy ? 'border-red-500' : ''}
+                                        />
+                                        {errors.invitedBy && <p className="text-red-500 text-sm">{errors.invitedBy}</p>}
                                     </div>
                                 </div>
 
-                                <div className="space-y-2">
-                                    <Label htmlFor="message">Message (Optional)</Label>
-                                    <textarea
-                                        id="message"
-                                        name="message"
-                                        value={formData.message}
-                                        onChange={handleInputChange}
-                                        placeholder="Tell us anything you'd like to know..."
-                                        rows={4}
-                                        className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                    />
-                                </div>
-
-                                <div className="flex items-start space-x-2">
-                                    <Checkbox
-                                        id="terms"
-                                        checked={formData.terms}
-                                        onCheckedChange={handleCheckboxChange}
-                                    />
-                                    <Label htmlFor="terms" className="text-sm">
-                                        I agree to the <a href="#" className="text-primary hover:underline">Terms and Conditions</a> and <a href="#" className="text-primary hover:underline">Privacy Policy</a>
-                                    </Label>
-                                </div>
-                                {errors.terms && <p className="text-red-500 text-sm">{errors.terms}</p>}
-
-                                <div className="flex flex-col sm:flex-row gap-4 justify-between pt-4">
-                                    <Button type="button" variant="outline" onClick={() => onNavigate('details')}>
-                                        View Plans
-                                    </Button>
+                                <div className="flex justify-center pt-4">
                                     <Button type="submit" size="lg" disabled={isSubmitting}>
                                         {isSubmitting ? 'Submitting...' : 'Submit Registration'}
                                     </Button>
