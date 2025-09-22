@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=VT323&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&display=swap');
+
 @import 'tailwindcss';
 
 @plugin 'tailwindcss-animate';
@@ -142,17 +144,25 @@
     }
 }
 /* Fonts */
+.press-start-2p {
+    font-family: "Press Start 2P", system-ui;
+    /* font-weight: 400; */
+    font-style: normal;
+}
+
 .space-mono {
     font-family: 'Space Mono', monospace;
 }
 
 .vt323 {
     font-family: "VT323", monospace;
+}
+
+.vt323.about-us  {
     font-weight: 400;
     font-style: normal;
     font-size: 46px;
 }
-
 .pixelify {
     font-family: "Pixelify Sans", sans-serif;
     font-optical-sizing: auto;

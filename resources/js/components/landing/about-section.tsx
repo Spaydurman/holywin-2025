@@ -49,7 +49,7 @@ export default function AboutSection() {
                     </div>
 
                     <div>
-                        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 vt323">About Meow</h2>
+                        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 vt323 about-us">About Meow</h2>
                             <TextType
                                 text={[
                                     "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",

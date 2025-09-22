@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import RandomizeText from '@/components/landing/randomize-text';
 import HalftoneArrow from '@/components/landing/halftone-arrow';
+import GridDistortion from '@/components/background/grid-distortion';
 
 interface HomeSectionProps {
     activeSection?: string;
@@ -57,20 +58,32 @@ export default function HomeSection({ activeSection }: HomeSectionProps) {
                 ))}
             </div>
 
+            <div style={{ width: '100%', height: '100vh', position: 'absolute' }}>
+                    <GridDistortion
+                        imageSrc="/images/2825771.gif"
+                        grid={80}
+                        mouse={0.1}
+                        strength={0.15}
+                        relaxation={0.9}
+                        className="custom-class"
+                    />
+            </div>
+
             <div className="max-w-9xl w-full text-center">
                 {/* Randomizing title that switches between HOLYWIN and LEVEL UP */}
 
                 <div className="relative mb-8 space-mono ">
-                    <h1 className="text-6xl md:text-[200px] font-bold mb-4">
+                    <h1 className="text-6xl md:text-[120px] font-bold mb-4 press-start-2p">
                         <RandomizeText text={displayText} />
                     </h1>
                 </div>
-                <p className="text-xl md:text-2xl text-muted-foreground mb-8">
+                {/* <p className="text-xl md:text-2xl text-muted-foreground mb-8">
                     Discover amazing features and join our community today
-                </p>
+                </p> */}
             </div>
 
 
         </div>
     );
 }
+
