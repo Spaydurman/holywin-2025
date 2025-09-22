@@ -6,6 +6,9 @@ export default function DetailsSection() {
     return (
 
         <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-gradient-to-b from-[#001636] to-[#000B1B]">
+            {/* <div style={{ width: '100%', height: '100vh', position: 'absolute' }}>
+                <img src="/images/2825771.gif" alt="" />
+            </div> */}
             <ProfileCard
                     name="Clark V."
                     title="Software Engineer"
