@@ -168,8 +168,8 @@ const PixelTransition: React.FC<PixelTransitionProps> = ({
         rounded-[15px]
         border-2
         border-white
-        w-[300px]
-        max-w-full
+        w-[340px]
+        h-[250px]
         relative
         overflow-hidden
       `}
@@ -180,7 +180,7 @@ const PixelTransition: React.FC<PixelTransitionProps> = ({
     >
       <div style={{ paddingTop: aspectRatio }} />
 
-      <div className="absolute inset-0 w-full h-full">
+      <div className="absolute inset-0 w-full">
         {contentArray.length > 0 ? contentArray[currentIndex] : firstContent}
       </div>
 
@@ -188,7 +188,7 @@ const PixelTransition: React.FC<PixelTransitionProps> = ({
         {contentArray.length > 1 ? contentArray[nextIndex] : secondContent}
       </div>
 
-      <div ref={pixelGridRef} className="absolute inset-0 w-full h-full pointer-events-none z-[3]" />
+      <div ref={pixelGridRef} className="absolute inset-0 w-full h-48 pointer-events-none z-[3]" />
     </div>
   );
 };
