@@ -46,7 +46,7 @@ export default function Landing() {
 
     return (
         <>
-            <Head title="Landing Page" />
+            <Head title="Level Up" />
             <div className="w-full">
                 {/* Navigation dots for each section */}
                 <div className="fixed right-8 top-1/2 transform -translate-y-1/2 z-50 hidden md:block">
