@@ -6,6 +6,14 @@ export default function AboutSection() {
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-gradient-to-b from-[#000B1B] to-[#001636]">
+            <div className="absolute w-full h-screen z-0">
+                <img
+                    src="/images/2825771.gif"
+                    alt=""
+                    className="w-full h-full object-cover [mask-image:linear-gradient(to_bottom,transparent,black)] [mask-repeat:no-repeat] [mask-size:100%_100%]"
+                />
+            </div>
+
             <div className="max-w-5xl w-full">
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -54,7 +62,7 @@ export default function AboutSection() {
 
                     </div>
 
-                    <div>
+                    <div className="z-10">
                         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 vt323 about-us">About Meow</h2>
                             <TextType
                                 text={[

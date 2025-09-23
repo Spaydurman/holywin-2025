@@ -1,5 +1,7 @@
 
 import ProfileCard from "../ui/profile-card";
+import TargetCursor from "../ui/target-cursor";
+
 export default function DetailsSection() {
 
 
@@ -9,6 +11,10 @@ export default function DetailsSection() {
             {/* <div style={{ width: '100%', height: '100vh', position: 'absolute' }}>
                 <img src="/images/2825771.gif" alt="" />
             </div> */}
+            <TargetCursor
+                spinDuration={2}
+                hideDefaultCursor={true}
+            />
             <ProfileCard
                     name="Clark V."
                     title="Software Engineer"
@@ -16,6 +22,7 @@ export default function DetailsSection() {
                     status="Online"
                     contactText="Contact Me"
                     avatarUrl="/images/clark.png"
+                    className="cursor-target"
 
                     showUserInfo={false}
                     enableTilt={true}
