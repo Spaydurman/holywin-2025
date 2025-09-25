@@ -422,10 +422,13 @@
     left: 0;
     width: 100%;
     height: 100%;
-    border: 4px dashed hsl(var(--primary));
+    /* border: 10px dashed #fff; */
     border-radius: 50%;
     box-sizing: border-box;
-    animation: spin-dash 3s linear infinite;
+    animation: spin-dash 6s linear infinite;
     pointer-events: none;
     z-index: 10;
+    border-style: none;
+    border-top: 2px dashed #fff;
+    border-right: 2px dashed #fff;
 }
