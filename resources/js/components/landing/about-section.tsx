@@ -22,7 +22,7 @@ export default function AboutSection() {
             x,
             y
         };
-        console.log('test');
+
         setCoins(prev => [...prev, newCoin]);
         
         setTimeout(() => {
