@@ -1,11 +1,44 @@
 
+import { useState } from 'react';
 import TextType from "../ui/text-type";
 import PixelTransition from "../ui/pixel-transition";
-export default function AboutSection() {
+import Coin from '../ui/coin';
+interface CoinPosition {
+    id: number;
+    x: number;
+    y: number;
+}
 
+export default function AboutSection() {
+    const [coins, setCoins] = useState<CoinPosition[]>([]);
+
+    const handleClick = (e: React.MouseEvent) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const newCoin = {
+            id: Date.now(),
+            x,
+            y
+        };
+        
+        setCoins(prev => [...prev, newCoin]);
+        
+        setTimeout(() => {
+            setCoins(prev => prev.filter(coin => coin.id !== newCoin.id));
+        }, 1000);
+    };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-gradient-to-b from-[#000B1B] to-[#001636]">
+        <div
+            className="min-h-screen flex flex-col items-center justify-center p-8 bg-gradient-to-b from-[#000B1B] to-[#001636]"
+            onClick={handleClick}
+        >
+            {coins.map(coin => (
+                <Coin key={coin.id} x={coin.x} y={coin.y} id={coin.id} />
+            ))}
+
             <div className="absolute w-full h-screen z-0">
                 <img
                     src="/images/2825771.gif"
@@ -14,7 +47,7 @@ export default function AboutSection() {
                 />
             </div>
 
-            <div className="max-w-5xl w-full">
+            <div className="max-w-5xl w-full relative">
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div>
@@ -37,7 +70,7 @@ export default function AboutSection() {
                                     <img
                                         src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Cat_poster_1.jpg/1200px-Cat_poster_1.jpg"
                                         alt="Cat 3"
-                                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                        style={{ width: "100%", height: "10%", objectFit: "cover" }}
                                     />,
                                     <div
                                     style={{
@@ -80,3 +113,4 @@ export default function AboutSection() {
         </div>
     );
 }
+

@@ -11,10 +11,10 @@ export default function DetailsSection() {
             {/* <div style={{ width: '100%', height: '100vh', position: 'absolute' }}>
                 <img src="/images/2825771.gif" alt="" />
             </div> */}
-            <TargetCursor
+            {/* <TargetCursor
                 spinDuration={2}
                 hideDefaultCursor={true}
-            />
+            /> */}
             <ProfileCard
                     name="Clark V."
                     title="Software Engineer"
