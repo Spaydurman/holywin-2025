@@ -1,47 +1,67 @@
+// LogoFlip.tsx
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import ProfileCard from "../ui/profile-card";
-import Map from "../ui/map";
+gsap.registerPlugin(ScrollTrigger);
 
-export default function DetailsSection() {
+export default function LogoFlip() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const logo1Ref = useRef<HTMLImageElement>(null);
+  const logo2Ref = useRef<HTMLImageElement>(null);
 
+  useEffect(() => {
+    if (!sectionRef.current || !logo1Ref.current || !logo2Ref.current) return;
 
-    return (
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top top",
+        end: "bottom top", // flip during scroll within section
+        scrub: true,
+        pin: true, // sticky effect
+      },
+    });
 
-        <div className="min-h-screen flex items-center justify-center p-8 bg-gradient-to-b from-[#001636] to-[#000B1B]">
-            {/* <div style={{ width: '100%', height: '100vh', position: 'absolute' }}>
-                <img src="/images/2825771.gif" alt="" />
-            </div> */}
-            {/* <TargetCursor
-                spinDuration={2}
-                hideDefaultCursor={true}
-            /> */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
-                <div className="w-full flex items-center justify-center">
-                    <div className="relative">
-                        {/* Circle with diameter slightly larger than 400px */}
-                        <div className="dashed-circle-border">
-                            <Map className="mt-0 rounded-xl" style={{ width: '400px', height: '400px' }} />
-                        </div>
-                    </div>
-                </div>
-                <div className="flex items-center justify-center">
-                    <ProfileCard
-                        name="Clark V."
-                        title="Software Engineer"
-                        handle="javicodes"
-                        status="Online"
-                        contactText="Contact Me"
-                        avatarUrl="/images/clark.png"
-                        className="cursor-target"
-
-                        showUserInfo={false}
-                        enableTilt={true}
-                        enableMobileTilt={false}
-                        onContactClick={() => console.log('Contact clicked')}
-                    />
-                </div>
-            </div>
-            
-        </div>
+    tl.to(logo1Ref.current, {
+      rotateY: 90,
+      opacity: 0,
+      duration: 0.5,
+    }).fromTo(
+      logo2Ref.current,
+      { rotateY: -90, opacity: 0 },
+      { rotateY: 0, opacity: 1, duration: 0.5 },
+      "<" // run at same time
     );
+  }, []);
+
+  return (
+    <div className="h-[200vh] bg-gradient-to-b from-[#001636] to-[#000B1B]">
+      {/* Section with sticky logo */}
+      <div
+        ref={sectionRef}
+        className="relative h-screen flex items-center justify-center perspective"
+      >
+        {/* Logo 1 */}
+        <div ref={logo1Ref} className="h-screen w-screen flex items-center justify-center">
+             <img
+
+                src="/images/R.png"
+                alt="Logo 1"
+                className="w-60 h-auto object-contain absolute"
+            />
+        </div>
+
+
+        {/* Logo 2 */}
+        <img
+          ref={logo2Ref}
+          src="/images/valorant.png"
+          alt="Logo 2"
+          className="w-60 h-60 object-contain absolute"
+          style={{ opacity: 0 }}
+        />
+      </div>
+    </div>
+  );
 }
