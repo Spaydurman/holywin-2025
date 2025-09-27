@@ -70,7 +70,7 @@ export default function DetailsSection() {
         <div
             ref={containerRef}
             // grid grid-cols-1 lg:grid-cols-2 gap-8
-            className=" w-full bg-gradient-to-b from-[#000B1B] to-[#001636] "
+            className="bg-gradient-to-b from-[#000B1B] to-[#001636] "
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >

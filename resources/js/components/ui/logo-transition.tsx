@@ -42,14 +42,12 @@ export default function LogoFlip() {
         className="relative h-screen flex items-center justify-center perspective"
       >
         {/* Logo 1 */}
-        <div ref={logo1Ref} className="h-screen w-screen flex items-center justify-center">
-             <img
-
-                src="/images/R.png"
-                alt="Logo 1"
-                className="w-60 h-auto object-contain absolute"
-            />
-        </div>
+          <img
+            ref={logo1Ref}  
+            src="/images/R.png"
+            alt="Logo 1"
+            className="w-60 h-auto absolute"
+        />
 
 
         {/* Logo 2 */}
@@ -57,10 +55,11 @@ export default function LogoFlip() {
           ref={logo2Ref}
           src="/images/valorant.png"
           alt="Logo 2"
-          className="w-60 h-60 object-contain absolute"
+          className="w-60 h-60 absolute"
           style={{ opacity: 0 }}
         />
       </div>
     </div>
   );
 }
+
