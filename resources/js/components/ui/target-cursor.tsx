@@ -5,12 +5,14 @@ export interface TargetCursorProps {
   targetSelector?: string;
   spinDuration?: number;
   hideDefaultCursor?: boolean;
+  isActive?: boolean;
 }
 
 const TargetCursor: React.FC<TargetCursorProps> = ({
   targetSelector = '.cursor-target',
   spinDuration = 2,
-  hideDefaultCursor = true
+  hideDefaultCursor = true,
+  isActive = true
 }) => {
   const cursorRef = useRef<HTMLDivElement>(null);
   const cornersRef = useRef<NodeListOf<HTMLDivElement>>(null);
@@ -36,7 +38,7 @@ const TargetCursor: React.FC<TargetCursorProps> = ({
   }, []);
 
   useEffect(() => {
-    if (!cursorRef.current) return;
+    if (!cursorRef.current || !isActive) return;
 
     const originalCursor = document.body.style.cursor;
     if (hideDefaultCursor) {
@@ -312,7 +314,7 @@ const TargetCursor: React.FC<TargetCursorProps> = ({
       spinTl.current?.kill();
       document.body.style.cursor = originalCursor;
     };
-  }, [targetSelector, spinDuration, moveCursor, constants, hideDefaultCursor]);
+  }, [targetSelector, spinDuration, moveCursor, constants, hideDefaultCursor, isActive]);
 
   useEffect(() => {
     if (!cursorRef.current || !spinTl.current) return;
@@ -325,7 +327,7 @@ const TargetCursor: React.FC<TargetCursorProps> = ({
     }
   }, [spinDuration]);
 
-  return (
+  return isActive ? (
     <div
       ref={cursorRef}
       className="fixed top-0 left-0 w-0 h-0 pointer-events-none z-[9999] mix-blend-difference transform -translate-x-1/2 -translate-y-1/2"
@@ -353,7 +355,7 @@ const TargetCursor: React.FC<TargetCursorProps> = ({
         style={{ willChange: 'transform' }}
       />
     </div>
-  );
+  ) : null;
 };
 
 export default TargetCursor;
