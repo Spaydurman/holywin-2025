@@ -22,6 +22,7 @@ export default function DetailsSection() {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
+            
             <TargetCursor
                 spinDuration={2}
                 hideDefaultCursor={true}
