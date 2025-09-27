@@ -9,7 +9,6 @@ export default function Landing() {
     const [activeSection, setActiveSection] = useState('home');
     const [scrollPosition, setScrollPosition] = useState(0);
 
-    // Track scroll position
     useEffect(() => {
         const handleScroll = () => {
             setScrollPosition(window.scrollY);
@@ -19,13 +18,11 @@ export default function Landing() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Update active section based on scroll position
     useEffect(() => {
         const sections = ['home', 'about', 'details', 'registration', 'pixel-demo'];
         const sectionElements = sections.map(id => document.getElementById(id));
         const offsets = sectionElements.map(el => el?.offsetTop || 0);
 
-        // Find the section that is currently in view
         const currentSectionIndex = offsets.findIndex((offset, index) => {
             const nextOffset = offsets[index + 1] || Infinity;
             return scrollPosition >= offset - 100 && scrollPosition < nextOffset - 100;
@@ -48,7 +45,6 @@ export default function Landing() {
         <>
             <Head title="Level Up" />
             <div className="w-full">
-                {/* Navigation dots for each section */}
                 <div className="fixed right-8 top-1/2 transform -translate-y-1/2 z-50 hidden md:block">
                     {['home', 'about', 'details', 'registration', 'pixel-demo'].map((section) => (
                         <button
@@ -73,7 +69,7 @@ export default function Landing() {
                 </div>
 
                 <div id="details" className="w-full">
-                    <DetailsSection onNavigate={handleNavigate} />
+                    <DetailsSection />
                 </div>
 
                 <div id="registration" className="w-full">
