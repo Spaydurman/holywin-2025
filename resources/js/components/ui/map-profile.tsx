@@ -4,12 +4,42 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ProfileCard from "../ui/profile-card";
 import Map from "../ui/map";
 import TargetCursor from "../ui/target-cursor";
+import TextTypeScrambler from "./text-type-scrambler";
+
+// Hook to detect when an element is in the viewport
+const useOnScreen = (ref: React.RefObject<HTMLElement | null>) => {
+  const [isIntersecting, setIntersecting] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      setIntersecting(entry.isIntersecting);
+    }, {
+      threshold: 0.1, // Trigger when 10% of the element is visible
+    });
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, [ref]);
+
+  return isIntersecting;
+};
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function DetailsSection() {
     const [isMouseOver, setIsMouseOver] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
+    const mapContainerRef = useRef<HTMLDivElement>(null);
+    const speakerContainerRef = useRef<HTMLDivElement>(null);
+    const isMapContainerVisible = useOnScreen(mapContainerRef);
+    const isSpeakerContainerVisible = useOnScreen(speakerContainerRef);
 
     const handleMouseEnter = () => {
         setIsMouseOver(true);
@@ -80,28 +110,59 @@ export default function DetailsSection() {
                 hideDefaultCursor={true}
                 isActive={isMouseOver}
             />
-            <div className="h-screen flex items-center justify-center">
-                <div className="relative" id="map-container">
-                    <div className="dashed-circle-border">
+            <div className="h-screen flex items-center justify-center gap-4">
+                <div className="flex flex-col gap-4" id="map-container" ref={mapContainerRef}>
+                    <div className="dashed-circle-border relative z-0">
                         <Map className="mt-0 rounded-xl cursor-target" style={{ width: '400px', height: '400px' }} />
+                    </div>
+                    <div className="min-w-[300px]">
+                        <TextTypeScrambler
+                            text={[
+                                "Location: Manila, Philippines",
+                                "Coordinates: 14.5995° N, 120.9842° E",
+                                "Address: Roxas Blvd, Ermita, Manila"
+                            ]}
+                                speed={60}
+                                scrambleSpeed={40}
+                                onComplete={() => console.log("Location details complete!")}
+                                className="text-lg font-mono text-white text-center"
+                                isActive={isMapContainerVisible}
+                        />
                     </div>
                 </div>
             </div>
-            <div className="h-screen flex items-center justify-center" id="profile-card-section">
-                <ProfileCard
-                    name="Clark V."
-                    title="Software Engineer"
-                    handle="javicodes"
-                    status="Online"
-                    contactText="Contact Me"
-                    avatarUrl="/images/clark.png"
-                    className="cursor-target"
+            <div className="h-screen flex items-center justify-end" id="profile-card-section" ref={speakerContainerRef}>
+                <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8">
+                        <ProfileCard
+                            name="Clark V."
+                            title="Software Engineer"
+                            handle="javicodes"
+                            status="Online"
+                            contactText="Contact Me"
+                            avatarUrl="/images/clark.png"
+                            className="cursor-target"
 
-                    showUserInfo={false}
-                    enableTilt={true}
-                    enableMobileTilt={false}
-                    onContactClick={() => console.log('Contact clicked')}
-                />
+                            showUserInfo={false}
+                            enableTilt={true}
+                            enableMobileTilt={false}
+                            onContactClick={() => console.log('Contact clicked')}
+                        />
+                        <div className="min-w-[600px] h-full">
+                            <TextTypeScrambler
+                                text={[
+                                    "Speaker: Pastor John Doe",
+                                    "Background: Senior Pastor with 20 years of ministry",
+                                    "Focus: Community outreach and youth empowerment"
+                                ]}
+                                    speed={60}
+                                    scrambleSpeed={40}
+                                    onComplete={() => console.log("Map details complete!")}
+                                    className="text-lg font-mono text-white"
+                                    isActive={isSpeakerContainerVisible}
+                            />
+                        </div>
+                </div>
+                
             </div>
         </div>
     );
