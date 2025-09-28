@@ -5,7 +5,7 @@ import ProfileCard from "../ui/profile-card";
 import Map from "../ui/map";
 import TargetCursor from "../ui/target-cursor";
 import TextTypeScrambler from "./text-type-scrambler";
-
+import ScrollReveal from "./scroll-reveal"; 
 // Hook to detect when an element is in the viewport
 const useOnScreen = (ref: React.RefObject<HTMLElement | null>) => {
   const [isIntersecting, setIntersecting] = useState(false);
@@ -162,7 +162,22 @@ export default function DetailsSection() {
                             />
                         </div>
                 </div>
-                
+
+            </div>
+
+            <div className="h-screen flex items-center justify-center" id="profile-card-section">
+                <div className="max-w-[600px]">
+                    <ScrollReveal
+                        baseOpacity={0}
+                        enableBlur={true}
+                        baseRotation={5}
+                        blurStrength={10}
+                    >
+                        When does a man die? When he is hit by a bullet? No! When he suffers a disease?
+                        No! When he ate a soup made out of a poisonous mushroom?
+                        No! A man dies when he is forgotten!
+                    </ScrollReveal>
+                </div>
             </div>
         </div>
     );
