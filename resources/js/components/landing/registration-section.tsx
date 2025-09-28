@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-
+import Lanyard from '../ui/lanyard';
 interface FormData {
     name: string;
     email: string;
@@ -144,7 +144,7 @@ export default function RegistrationSection({ onNavigate }: RegistrationSectionP
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-gradient-to-b from-[#000B1B] to-[#001636]">
+        <div className="min-h-screen flex items-center justify-center p-8 bg-gradient-to-b from-[#001636] to-[#000B1B]">
             <div className="max-w-4xl w-full">
                 <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">Register Now</h2>
                 <p className="text-xl text-muted-foreground text-center mb-12">
@@ -250,6 +250,8 @@ export default function RegistrationSection({ onNavigate }: RegistrationSectionP
                     </CardContent>
                 </Card>
             </div>
+
+            <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
         </div>
     );
 }
