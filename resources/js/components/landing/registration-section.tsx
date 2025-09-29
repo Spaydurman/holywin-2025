@@ -20,9 +20,13 @@ export default function RegistrationSection() {
         fetchRegistrationCount();
     }, []);
 
+    const handleRegistrationSuccess = () => {
+        setRegistrationCount(prevCount => prevCount + 1);
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center p-8 bg-gradient-to-b from-[#001636] to-[#000B1B]">
-            <RegistrationForm />
+            <RegistrationForm onSuccess={handleRegistrationSuccess} />
             <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} cardText={registrationCount.toString()}/>
         </div>
     );
