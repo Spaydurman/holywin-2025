@@ -58,4 +58,16 @@ class RegistrationController extends Controller
             'exists' => $exists
         ]);
     }
+
+    /**
+     * Get the total number of registrations.
+     */
+    public function getCount(): JsonResponse
+    {
+        $count = Registration::count();
+
+        return response()->json([
+            'count' => $count
+        ]);
+    }
 }
