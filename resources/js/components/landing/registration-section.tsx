@@ -14,7 +14,6 @@ export default function RegistrationSection() {
                 setRegistrationCount(response.data.count);
             } catch (error) {
                 console.error('Error fetching registration count:', error);
-                // Keep the default value of 0 if there's an error
             }
         };
 
