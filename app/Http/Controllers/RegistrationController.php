@@ -15,7 +15,6 @@ class RegistrationController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        Log::info('Registration attempt', $request->all());
         $validatedData = $request->validate([
             'name' => 'required|string|min:2|max:255',
             'email' => 'required|email|unique:registrations,email|max:255',
@@ -25,14 +24,12 @@ class RegistrationController extends Controller
             'salvationist' => 'required|in:yes,no',
         ]);
 
-        // Additional validation: if salvationist is 'no', invited_by is required
         if ($validatedData['salvationist'] === 'no' && (empty($validatedData['invited_by']) || strlen(trim($validatedData['invited_by'])) < 2)) {
             throw ValidationException::withMessages([
                 'invited_by' => ['The invited by field is required when you are not a salvationist.']
             ]);
         }
 
-        // If salvationist is 'yes', ensure invited_by is not required but clear it if empty
         if ($validatedData['salvationist'] === 'yes') {
             $validatedData['invited_by'] = $validatedData['invited_by'] ?? null;
         }
@@ -43,5 +40,22 @@ class RegistrationController extends Controller
             'message' => 'Registration successful',
             'data' => $registration
         ], 201);
+    }
+
+    /**
+     * Check if an email already exists.
+     */
+    public function checkEmail(Request $request): JsonResponse
+    {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+
+        $email = $request->input('email');
+        $exists = Registration::where('email', $email)->exists();
+
+        return response()->json([
+            'exists' => $exists
+        ]);
     }
 }

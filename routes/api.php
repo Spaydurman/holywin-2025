@@ -15,3 +15,4 @@ use App\Http\Controllers\RegistrationController;
 */
 
 Route::post('/register', [RegistrationController::class, 'store'])->name('api.register');
+Route::get('/check-email', [RegistrationController::class, 'checkEmail'])->name('api.check-email');

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,6 +30,17 @@ export default function RegistrationSection({ onNavigate }: RegistrationSectionP
     const [errors, setErrors] = useState<{name?: string; email?: string; birthday?: string; age?: string; invitedBy?: string; salvationist?: string}>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitSuccess, setSubmitSuccess] = useState(false);
+    const [emailValidationStatus, setEmailValidationStatus] = useState<'valid' | 'invalid' | 'checking' | null>(null);
+    const emailCheckTimeout = useRef<NodeJS.Timeout | null>(null);
+
+    // Clean up timeout on component unmount
+    useEffect(() => {
+        return () => {
+            if (emailCheckTimeout.current) {
+                clearTimeout(emailCheckTimeout.current);
+            }
+        };
+    }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -40,6 +51,8 @@ export default function RegistrationSection({ onNavigate }: RegistrationSectionP
             setErrors(prev => ({ ...prev, name: undefined }));
         } else if (name === 'email' && errors.email) {
             setErrors(prev => ({ ...prev, email: undefined }));
+            // Reset email validation status when user starts typing
+            setEmailValidationStatus(null);
         } else if (name === 'birthday' && errors.birthday) {
             setErrors(prev => ({ ...prev, birthday: undefined }));
         } else if (name === 'age' && errors.age) {
@@ -48,6 +61,68 @@ export default function RegistrationSection({ onNavigate }: RegistrationSectionP
             setErrors(prev => ({ ...prev, invitedBy: undefined }));
         } else if (name === 'salvationist' && errors.salvationist) {
             setErrors(prev => ({ ...prev, salvationist: undefined }));
+        }
+
+        // If the field being changed is email, check for email availability after a delay
+        if (name === 'email') {
+            if (emailCheckTimeout.current) {
+                clearTimeout(emailCheckTimeout.current);
+            }
+
+            emailCheckTimeout.current = setTimeout(async () => {
+                if (value) {
+                    await checkEmailAvailability(value);
+                } else {
+                    setEmailValidationStatus(null);
+                }
+            }, 500); // 500ms delay after user stops typing
+        }
+    };
+
+    // Function to check email availability
+    const checkEmailAvailability = async (email: string) => {
+        // Basic email format validation first
+        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+        if (!emailRegex.test(email)) {
+            setEmailValidationStatus('invalid');
+            return;
+        }
+
+        setEmailValidationStatus('checking');
+
+        try {
+            const response = await fetch(`/api/check-email?email=${encodeURIComponent(email)}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                if (data.exists) {
+                    setErrors(prev => ({ ...prev, email: 'This email is already registered' }));
+                    setEmailValidationStatus('invalid');
+                } else {
+                    // Clear email error if email is valid and doesn't exist
+                    setErrors(prev => {
+                        const newErrors = { ...prev };
+                        if (newErrors.email?.includes('already registered')) {
+                            delete newErrors.email;
+                        }
+                        return newErrors;
+                    });
+                    setEmailValidationStatus('valid');
+                }
+            } else {
+                // If there's an error checking email, don't block the user
+                setEmailValidationStatus('valid');
+            }
+        } catch (error) {
+            console.error('Error checking email availability:', error);
+            // If there's an error checking email, don't block the user
+            setEmailValidationStatus('valid');
         }
     };
 
@@ -67,6 +142,9 @@ export default function RegistrationSection({ onNavigate }: RegistrationSectionP
             const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
             if (!emailRegex.test(formData.email)) {
                 newErrors.email = 'Please enter a valid email address';
+            } else if (emailValidationStatus === 'invalid') {
+                // If email validation status is invalid (already exists), prevent form submission
+                newErrors.email = 'This email is already registered';
             }
         }
 
@@ -224,15 +302,33 @@ export default function RegistrationSection({ onNavigate }: RegistrationSectionP
 
                                     <div className="space-y-2">
                                         <Label htmlFor="email">Email Address</Label>
-                                        <Input
-                                            id="email"
-                                            name="email"
-                                            type="email"
-                                            value={formData.email}
-                                            onChange={handleInputChange}
-                                            placeholder="Enter your email"
-                                            className={errors.email ? 'border-red-500' : ''}
-                                        />
+                                        <div className="relative">
+                                            <Input
+                                                id="email"
+                                                name="email"
+                                                type="email"
+                                                value={formData.email}
+                                                onChange={handleInputChange}
+                                                placeholder="Enter your email"
+                                                className={`${errors.email ? 'border-red-500' : ''} ${emailValidationStatus === 'checking' ? 'pr-10' : ''}`}
+                                            />
+                                            {emailValidationStatus === 'checking' && (
+                                                <span className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24">
+                                                        <path fill="none" stroke="currentColor" stroke-dasharray="16" stroke-dashoffset="16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3c4.97 0 9 4.03 9 9">
+                                                            <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.2s" values="16;0"/>
+                                                            <animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/>
+                                                        </path>
+                                                    </svg>
+                                                </span>
+                                            )}
+                                            {emailValidationStatus === 'valid' && !errors.email && (
+                                                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500">✓</span>
+                                            )}
+                                            {emailValidationStatus === 'invalid' && (
+                                                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-red-500">✗</span>
+                                            )}
+                                        </div>
                                         {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
                                     </div>
 
