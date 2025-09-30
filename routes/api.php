@@ -17,3 +17,4 @@ use App\Http\Controllers\RegistrationController;
 Route::post('/register', [RegistrationController::class, 'store'])->name('api.register');
 Route::get('/check-email', [RegistrationController::class, 'checkEmail'])->name('api.check-email');
 Route::get('/registrations/count', [RegistrationController::class, 'getCount'])->name('api.registrations.count');
+Route::get('/registrations', [RegistrationController::class, 'index'])->name('api.registrations.index');

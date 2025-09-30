@@ -70,4 +70,44 @@ class RegistrationController extends Controller
             'count' => $count
         ]);
     }
+
+    /**
+     * Display a listing of the resource with search, pagination and per page options.
+     */
+    public function index(Request $request): JsonResponse
+    {
+        $query = Registration::query();
+
+        // Search functionality
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('invited_by', 'like', "%{$search}%")
+                  ->orWhere('salvationist', 'like', "%{$search}%");
+            });
+        }
+
+        // Sort by created_at descending by default
+        $query->orderBy('created_at', 'desc');
+
+        // Pagination with per page option
+        $perPage = $request->get('per_page', 10);
+        $page = $request->get('page', 1);
+
+        $registrations = $query->paginate($perPage, ['*'], 'page', $page);
+
+        return response()->json([
+            'data' => $registrations->items(),
+            'pagination' => [
+                'current_page' => $registrations->currentPage(),
+                'last_page' => $registrations->lastPage(),
+                'per_page' => $registrations->perPage(),
+                'total' => $registrations->total(),
+                'from' => $registrations->firstItem(),
+                'to' => $registrations->lastItem(),
+            ]
+        ]);
+    }
 }
