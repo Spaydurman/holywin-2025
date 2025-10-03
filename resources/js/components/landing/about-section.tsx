@@ -16,7 +16,7 @@ export default function AboutSection() {
         const rect = e.currentTarget.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        
+
         const newCoin = {
             id: Date.now(),
             x,
@@ -24,7 +24,7 @@ export default function AboutSection() {
         };
 
         setCoins(prev => [...prev, newCoin]);
-        
+
         setTimeout(() => {
             setCoins(prev => prev.filter(coin => coin.id !== newCoin.id));
         }, 1000);
@@ -52,36 +52,31 @@ export default function AboutSection() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div>
                         <div className="absolute z-10 w-[400px] ">
-                            <img src="/images/monitor.png" alt="" />
+                            <img src="/images/monitor.PNG" alt="" />
                         </div>
                         <div className="p-8 h-[400px]">
                             <PixelTransition
                                 contents={[
                                     <img
-                                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/1200px-Cat03.jpg"
-                                        alt="Cat 1"
+                                        src="/images/H5.jpg"
+                                        alt="H5"
                                         style={{ width: "100%", height: "100%", objectFit: "cover" }}
                                     />,
                                     <img
-                                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cat_November_2010-1a.jpg/1200px-Cat_November_2010-1a.jpg"
-                                        alt="Cat 2"
+                                        src="/images/H4.jpg"
+                                        alt="H6"
                                         style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                                    />,
-                                    <img
-                                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Cat_poster_1.jpg/1200px-Cat_poster_1.jpg"
-                                        alt="Cat 3"
-                                        style={{ width: "100%", height: "10%", objectFit: "cover" }}
                                     />,
                                     <div
-                                    style={{
-                                        width: "100%",
-                                        height: "100%",
-                                        display: "grid",
-                                        placeItems: "center",
-                                        backgroundColor: "#111"
-                                    }}
-                                    >
-                                    <p style={{ fontWeight: 900, fontSize: "3rem", color: "#ffffff" }}>Meow!</p>
+                                        style={{
+                                            width: "100%",
+                                            height: "100%",
+                                            display: "grid",
+                                            placeItems: "center",
+                                            backgroundColor: "#111"
+                                        }}
+                                        >
+                                        <p style={{ fontWeight: 900, fontSize: "3rem", color: "#ffffff" }}>Meow!</p>
                                     </div>
                                 ]}
                                 gridSize={12}
@@ -113,4 +108,3 @@ export default function AboutSection() {
         </div>
     );
 }
-

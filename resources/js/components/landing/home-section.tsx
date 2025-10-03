@@ -9,13 +9,13 @@ interface HomeSectionProps {
 }
 
 export default function HomeSection({ activeSection }: HomeSectionProps) {
-    const [displayText, setDisplayText] = useState('CTRL ALT');
+    const [displayText, setDisplayText] = useState('HOLYWIN');
     const [arrows, setArrows] = useState<Array<{id: number, left: number, delay: number}>>([]);
 
     // Switch between "HOLYWIN" and "LEVEL UP" every 10 seconds
     useEffect(() => {
         const textSwitchInterval = setInterval(() => {
-            setDisplayText(prev => prev === 'CTRL ALT' ? 'LEVEL UP' : 'CTRL ALT');
+            setDisplayText(prev => prev === 'HOLYWIN' ? 'LEVEL UP' : 'HOLYWIN');
         }, 5000);
 
         return () => clearInterval(textSwitchInterval);
