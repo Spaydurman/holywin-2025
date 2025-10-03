@@ -43,8 +43,8 @@ export default function LogoFlip() {
       >
         {/* Logo 1 */}
           <img
-            ref={logo1Ref}  
-            src="/images/R.png"
+            ref={logo1Ref}
+            src="/images/logo/YP White.svg"
             alt="Logo 1"
             className="w-60 h-auto absolute"
         />
@@ -53,7 +53,7 @@ export default function LogoFlip() {
         {/* Logo 2 */}
         <img
           ref={logo2Ref}
-          src="/images/valorant.png"
+          src="/images/logo/salvation army.png"
           alt="Logo 2"
           className="w-60 h-60 absolute"
           style={{ opacity: 0 }}
