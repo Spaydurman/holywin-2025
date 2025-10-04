@@ -233,7 +233,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, cardText = "YOUR TEXT" }: BandProps
             <mesh geometry={nodes.clamp.geometry} material={materials.metal} />
             {/* Text on the card */}
              <Text
-              position={[0, 0.3, 0.01]} // Position the text slightly above the card surface
+              position={[0, 0.5, 0.01]} // Position the text slightly above the card surface
               fontSize={0.1}
               color="black"
               anchorX="center"
@@ -242,7 +242,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, cardText = "YOUR TEXT" }: BandProps
               Registered
             </Text>
             <Text
-              position={[0, 0.5, 0.01]} // Position the text slightly above the card surface
+              position={[0, 0.7, 0.01]} // Position the text slightly above the card surface
               fontSize={0.3}
               color="black"
               anchorX="center"

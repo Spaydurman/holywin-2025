@@ -173,9 +173,11 @@ export default function DetailsSection() {
                         baseRotation={5}
                         blurStrength={10}
                     >
-                        When does a man die? When he is hit by a bullet? No! When he suffers a disease?
-                        No! When he ate a soup made out of a poisonous mushroom?
-                        No! A man dies when he is forgotten!
+                        "I press on toward the goal to win the prize
+                        for which God has called me heavenward
+                        in Christ Jesus."
+
+                        - Philippians 3:14 (NIV)
                     </ScrollReveal>
                 </div>
             </div>

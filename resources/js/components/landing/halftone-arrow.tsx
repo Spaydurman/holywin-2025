@@ -32,7 +32,7 @@ export default function HalftoneArrow({ delay = 0, leftPosition = 0 }: HalftoneA
             className={`halftone-arrow fixed bottom-0 ${isVisible ? animationClass : 'opacity-0'}`}
             style={{ left: `${leftPosition}%` }}
         >
-            <svg
+            {/* <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="60"
                 height="60"
@@ -45,7 +45,8 @@ export default function HalftoneArrow({ delay = 0, leftPosition = 0 }: HalftoneA
             >
                 <path d="m17 11-5-5-5 5"/>
                 <path d="m17 18-5-5-5 5"/>
-            </svg>
+            </svg> */}
+            <img className="w-20"  src="/images/Arrow up.png" alt="" />
         </div>
     );
 }
