@@ -7,22 +7,19 @@ interface MapProps {
 }
 
 const Map: React.FC<MapProps> = ({ className, style }) => {
-  // VST ECS Manila location
-  const vstEcsManila = {
+
+  const mapDetails = {
     id: 1,
-    name: 'VST ECS Manila',
-    lat: 14.5995,
-    lng: 120.9842
+    name: 'TSA Pasig',
+    lat: 14.563692563429464,
+    lng: 121.07192966944467
   };
+  // 14.563692563429464, 121.07192966944467
 
-  // Center of the map (Manila)
   const mapCenter = {
-    lat: 14.5995,
-    lng: 120.9842
+    lat: 14.563692563429464,
+    lng: 121.07192966944467
   };
-
-  // Radius for the circular map (in meters)
-//   const circleRadius = 50000;
 
   const mapContainerStyle = {
     width: '400px',
@@ -57,9 +54,9 @@ const Map: React.FC<MapProps> = ({ className, style }) => {
         >
           {/* Marker for VST ECS Manila */}
           <Marker
-            key={vstEcsManila.id}
-            position={{ lat: vstEcsManila.lat, lng: vstEcsManila.lng }}
-            title={vstEcsManila.name}
+            key={mapDetails.id}
+            position={{ lat: mapDetails.lat, lng: mapDetails.lng }}
+            title={mapDetails.name}
           />
         </GoogleMap>
       ) : (

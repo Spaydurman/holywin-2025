@@ -115,12 +115,13 @@ export default function DetailsSection() {
                     <div className="dashed-circle-border relative z-0">
                         <Map className="mt-0 rounded-xl cursor-target" style={{ width: '400px', height: '400px' }} />
                     </div>
-                    <div className="min-w-[300px]">
+                    <div className="max-w-[400px]">
                         <TextTypeScrambler
                             text={[
-                                "Location: Manila, Philippines",
-                                "Coordinates: 14.5995° N, 120.9842° E",
-                                "Address: Roxas Blvd, Ermita, Manila"
+                                "Location: Pasig, Philippines",
+                                "Coordinates: 14.5764° N, 121.0851° E",
+                                "Address: 25 Sgt. Pascua St, Pasig, 1600 Metro Manila, Philippines",
+
                             ]}
                                 speed={60}
                                 scrambleSpeed={40}
@@ -131,15 +132,29 @@ export default function DetailsSection() {
                     </div>
                 </div>
             </div>
-            <div className="h-screen flex items-center justify-end" id="profile-card-section" ref={speakerContainerRef}>
-                <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8">
+            <div className="h-screen flex-col flex items-center justify-center" id="profile-card-section" ref={speakerContainerRef}>
+                <div className="relative w-full flex items-center justify-center">
+                    <span className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white/90 tracking-wider select-none pointer-events-none mb-8">
+                        Speaker
+                    </span>
+                </div>
+                <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12">
                         <ProfileCard
-                            name="Clark V."
-                            title="Software Engineer"
-                            handle="javicodes"
+                            name="Oliver"
                             status="Online"
-                            contactText="Contact Me"
-                            avatarUrl="/images/clark.png"
+                            avatarUrl="/images/speaker/oliver.png"
+                            className="cursor-target"
+
+
+                            showUserInfo={false}
+                            enableTilt={true}
+                            enableMobileTilt={false}
+                            onContactClick={() => console.log('Contact clicked')}
+                        />
+                        <ProfileCard
+                            name="Jomel"
+                            status="Online"
+                            avatarUrl="/images/speaker/jomel.png"
                             className="cursor-target"
 
                             showUserInfo={false}
@@ -147,22 +162,7 @@ export default function DetailsSection() {
                             enableMobileTilt={false}
                             onContactClick={() => console.log('Contact clicked')}
                         />
-                        <div className="min-w-[600px] h-full">
-                            <TextTypeScrambler
-                                text={[
-                                    "Speaker: Pastor John Doe",
-                                    "Background: Senior Pastor with 20 years of ministry",
-                                    "Focus: Community outreach and youth empowerment"
-                                ]}
-                                    speed={60}
-                                    scrambleSpeed={40}
-                                    onComplete={() => console.log("Map details complete!")}
-                                    className="text-lg font-mono text-white"
-                                    isActive={isSpeakerContainerVisible}
-                            />
-                        </div>
                 </div>
-
             </div>
 
             <div className="h-screen flex items-center justify-center" id="profile-card-section">
