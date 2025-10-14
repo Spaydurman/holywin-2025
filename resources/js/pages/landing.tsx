@@ -46,7 +46,7 @@ export default function Landing() {
             <Head title="Level Up" />
             <div className="w-full">
                 <div className="fixed right-8 top-1/2 transform -translate-y-1/2 z-50 hidden md:block">
-                    {['home', 'about', 'details', 'registration', 'pixel-demo'].map((section) => (
+                    {['home', 'about', 'details', 'registration'].map((section) => (
                         <button
                             key={section}
                             onClick={() => handleNavigate(section)}
