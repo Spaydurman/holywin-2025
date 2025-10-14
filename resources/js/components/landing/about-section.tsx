@@ -62,22 +62,31 @@ export default function AboutSection() {
                                         alt="H5"
                                         style={{ width: "100%", height: "100%", objectFit: "cover" }}
                                     />,
-                                    <img
-                                        src="/images/H4.jpg"
-                                        alt="H6"
+                                     <img
+                                        src="/images/H3.png"
+                                        alt="H4"
                                         style={{ width: "100%", height: "100%", objectFit: "cover" }}
                                     />,
-                                    <div
-                                        style={{
-                                            width: "100%",
-                                            height: "100%",
-                                            display: "grid",
-                                            placeItems: "center",
-                                            backgroundColor: "#111"
-                                        }}
-                                        >
-                                        <p style={{ fontWeight: 900, fontSize: "3rem", color: "#ffffff" }}>Meow!</p>
-                                    </div>
+                                    <img
+                                        src="/images/H3.png"
+                                        alt="H3"
+                                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                    />,
+                                    <img
+                                        src="/images/H2.png"
+                                        alt="H2"
+                                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                    />,
+                                    <img
+                                        src="/images/H1.png"
+                                        alt="H1"
+                                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                    />,
+                                    <img
+                                        src="/images/H5.1.png"
+                                        alt="H5.1"
+                                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                    />,
                                 ]}
                                 gridSize={12}
                                 pixelColor='#ffffff'
@@ -90,18 +99,15 @@ export default function AboutSection() {
 
                     </div>
 
-                    <div className="z-10">
-                        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 vt323 about-us">About Meow</h2>
-                            <TextType
-                                text={[
-                                    "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
-                                    "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.",
-                                ]}
-                                typingSpeed={75}
-                                pauseDuration={1500}
-                                showCursor={true}
-                                cursorCharacter="_"
-                            />
+                    <div className="z-10"><h2 className="text-3xl md:text-4xl font-bold text-center mb-12 vt323 about-us">About Holywin</h2>
+                        <TextType 
+                            text={[
+                                `Holywin is an annual celebration organized by the Young People of Pasig Corps since 2019. Held every October, it serves as a gathering that reaches out to the youth and highlights God’s victories in our lives. Through fellowship, uplifting music, interactive activities, and the preaching of His Word, it reminds us that in every season, holiness truly wins!`
+                            ]} 
+                            typingSpeed={75} 
+                            pauseDuration={1500} 
+                            showCursor={true} 
+                            cursorCharacter="_" />
                     </div>
                 </div>
             </div>
