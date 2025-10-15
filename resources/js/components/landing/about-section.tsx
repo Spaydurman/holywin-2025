@@ -3,6 +3,8 @@ import { useState } from 'react';
 import TextType from "../ui/text-type";
 import PixelTransition from "../ui/pixel-transition";
 import Coin from '../ui/coin';
+import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
+
 interface CoinPosition {
     id: number;
     x: number;
@@ -11,6 +13,7 @@ interface CoinPosition {
 
 export default function AboutSection() {
     const [coins, setCoins] = useState<CoinPosition[]>([]);
+    const { setRef, isIntersecting } = useIntersectionObserver({ threshold: 0.1 });
 
     const handleClick = (e: React.MouseEvent) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -32,6 +35,7 @@ export default function AboutSection() {
 
     return (
         <div
+            ref={setRef}
             className="min-h-screen flex flex-col items-center justify-center p-8 bg-gradient-to-b from-[#000B1B] to-[#001636]"
             onClick={handleClick}
         >
@@ -49,12 +53,12 @@ export default function AboutSection() {
 
             <div className="max-w-5xl w-full relative">
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div>
-                        <div className="absolute z-10 w-[400px] ">
+                <div className="flex flex-col lg:flex-row gap-8">
+                    <div className="flex flex-col items-center">
+                        <div className="absolute z-10 w-[300px] sm:w-[300px] md:w-[300px] lg:w-[400px] xl:w-[400px]">
                             <img src="/images/monitor.PNG" alt="" />
                         </div>
-                        <div className="p-8 h-[400px]">
+                        <div className="p-1 lg:p-8 xl:p-8 h-[300px]">
                             <PixelTransition
                                 contents={[
                                     <img
@@ -94,20 +98,24 @@ export default function AboutSection() {
                                 cycleInterval={2000}
                                 autoCycle={true}
                                 className="custom-pixel-card"
+                                enabled={isIntersecting}
                             />
                         </div>
 
                     </div>
 
-                    <div className="z-10"><h2 className="text-3xl md:text-4xl font-bold text-center mb-12 vt323 about-us">About Holywin</h2>
-                        <TextType 
-                            text={[
-                                `Holywin is an annual celebration organized by the Young People of Pasig Corps since 2019. Held every October, it serves as a gathering that reaches out to the youth and highlights God’s victories in our lives. Through fellowship, uplifting music, interactive activities, and the preaching of His Word, it reminds us that in every season, holiness truly wins!`
-                            ]} 
-                            typingSpeed={75} 
-                            pauseDuration={1500} 
-                            showCursor={true} 
-                            cursorCharacter="_" />
+                    <div className="z-10 min-h-[300px] sm:w-[300px] md:w-[300px] lg:w-[600px] xl:w-[600px]">
+                        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 vt323 about-us">About Holywin</h2>
+                        {isIntersecting && (
+                            <TextType
+                                text={[
+                                    `Holywin is annual celebration organized by the Young People of Pasig Corps since 2019. Held every October, it serves as a gathering that reaches out to the youth and highlights God’s victories in our lives. Through fellowship, uplifting music, interactive activities, and the preaching of His Word, it reminds us that in every season, holiness truly wins!`
+                                ]}
+                                typingSpeed={75}
+                                pauseDuration={1500}
+                                showCursor={true}
+                                cursorCharacter="_" />
+                        )}
                     </div>
                 </div>
             </div>

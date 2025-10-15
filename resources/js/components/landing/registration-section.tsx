@@ -25,9 +25,14 @@ export default function RegistrationSection() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-8 bg-gradient-to-b from-[#001636] to-[#000B1B]">
-            <RegistrationForm onSuccess={handleRegistrationSuccess} />
-            <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} cardText={registrationCount.toString()}/>
+        <div className="min-h-screen flex flex-col md:flex-row items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12 bg-gradient-to-b from-[#001636] to-[#000B1B]">
+                <RegistrationForm onSuccess={handleRegistrationSuccess} />
+            {/* order-first md:order-last */}
+                <Lanyard
+                    position={[0, 0, 20]}
+                    gravity={[0, -40, 0]}
+                    cardText={registrationCount.toString()}
+                />
         </div>
     );
 }

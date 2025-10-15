@@ -407,8 +407,8 @@
 
 .dashed-circle-border {
     position: relative;
-    width: 420px;
-    height: 420px;
+    width: 400px;
+    height: 400px;
     display: flex;
     align-items: center;
     justify-content: center;

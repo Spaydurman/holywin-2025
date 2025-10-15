@@ -50,49 +50,106 @@ export default function DetailsSection() {
     };
 
     useEffect(() => {
+        // Function to check if device is mobile
+        const isMobileDevice = () => window.innerWidth < 768;
+
         gsap.set("#map-container", {
             x: 0,
             y: 0,
             scale: 1,
         });
 
-        ScrollTrigger.create({
-            trigger: "#profile-card-section",
-            start: "top center",
-            end: "bottom top", 
-            onEnter: () => {
-                gsap.to("#map-container", {
-                    x: -window.innerWidth / 2 + 200, 
-                    y: -window.innerHeight / 2 + window.innerHeight * 1.25, 
-                    scale: 0.7,
-                    duration: 1.5,
-                    ease: "power3.out",
-                    pin: true,
+        let scrollTriggerInstance: ScrollTrigger | null = null;
+
+        // Initialize ScrollTrigger only if not on mobile
+        if (!isMobileDevice()) {
+            scrollTriggerInstance = ScrollTrigger.create({
+                trigger: "#profile-card-section",
+                start: "top center",
+                end: "bottom top",
+                onEnter: () => {
+                    gsap.to("#map-container", {
+                        x: -window.innerWidth / 2 + 200,
+                        y: -window.innerHeight / 2 + window.innerHeight * 1.25,
+                        scale: 0.7,
+                        duration: 1.5,
+                        ease: "power3.out",
+                        pin: true,
+                    });
+                },
+                onLeave: () => {
+                    gsap.to("#map-container", {
+                        x: 0,
+                        y: 0,
+                        scale: 1,
+                        duration: 1.5,
+                        ease: "power3.out",
+                    });
+                },
+                onLeaveBack: () => {
+                    gsap.to("#map-container", {
+                        x: 0,
+                        y: 0,
+                        scale: 1,
+                        duration: 1.5,
+                        ease: "power3.out",
+                    });
+                },
+            });
+        }
+
+        // Handle window resize to enable/disable ScrollTrigger based on device
+        const handleResize = () => {
+            if (scrollTriggerInstance) {
+                scrollTriggerInstance.kill();
+                scrollTriggerInstance = null;
+            }
+
+            if (!isMobileDevice()) {
+                scrollTriggerInstance = ScrollTrigger.create({
+                    trigger: "#profile-card-section",
+                    start: "top center",
+                    end: "bottom top",
+                    onEnter: () => {
+                        gsap.to("#map-container", {
+                            x: -window.innerWidth / 2 + 200,
+                            y: -window.innerHeight / 2 + window.innerHeight * 1.25,
+                            scale: 0.7,
+                            duration: 1.5,
+                            ease: "power3.out",
+                            pin: true,
+                        });
+                    },
+                    onLeave: () => {
+                        gsap.to("#map-container", {
+                            x: 0,
+                            y: 0,
+                            scale: 1,
+                            duration: 1.5,
+                            ease: "power3.out",
+                        });
+                    },
+                    onLeaveBack: () => {
+                        gsap.to("#map-container", {
+                            x: 0,
+                            y: 0,
+                            scale: 1,
+                            duration: 1.5,
+                            ease: "power3.out",
+                        });
+                    },
                 });
-            },
-            onLeave: () => {
-                gsap.to("#map-container", {
-                    x: 0,
-                    y: 0, 
-                    scale: 1,
-                    duration: 1.5,
-                    ease: "power3.out",
-                });
-            },
-            onLeaveBack: () => {
-                gsap.to("#map-container", {
-                    x: 0,
-                    y: 0, 
-                    scale: 1, 
-                    duration: 1.5,
-                    ease: "power3.out",
-                });
-            },
-        });
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
 
         // Clean up function
         return () => {
-            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+            if (scrollTriggerInstance) {
+                scrollTriggerInstance.kill();
+            }
+            window.removeEventListener('resize', handleResize);
         };
     }, []);
 
@@ -113,9 +170,9 @@ export default function DetailsSection() {
             <div className="h-screen flex items-center justify-center gap-4">
                 <div className="flex flex-col gap-4" id="map-container" ref={mapContainerRef}>
                     <div className="dashed-circle-border relative z-0">
-                        <Map className="mt-0 rounded-xl cursor-target" style={{ width: '400px', height: '400px' }} />
+                        <Map className="mt-0 rounded-xl cursor-target" style={{ width: '380px', height: '380px' }} />
                     </div>
-                    <div className="max-w-[400px]">
+                    <div className="max-w-[400px] h-[100px] text-center px-4">
                         <TextTypeScrambler
                             text={[
                                 "Location: Pasig, Philippines",
@@ -126,7 +183,7 @@ export default function DetailsSection() {
                                 speed={60}
                                 scrambleSpeed={40}
                                 onComplete={() => console.log("Location details complete!")}
-                                className="text-lg font-mono text-white text-center"
+                                className="text-base sm:text-lg font-mono text-white text-center"
                                 isActive={isMapContainerVisible}
                         />
                     </div>
@@ -166,7 +223,7 @@ export default function DetailsSection() {
             </div>
 
             <div className="h-screen flex items-center justify-center" id="profile-card-section">
-                <div className="max-w-[600px]">
+                <div className="w-[300px] sm:w-[400px] md:w-[500px] lg:w-[600px]">
                     <ScrollReveal
                         baseOpacity={0}
                         enableBlur={true}

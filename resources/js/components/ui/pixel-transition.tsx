@@ -13,6 +13,7 @@ interface PixelTransitionProps {
   className?: string;
   style?: CSSProperties;
   aspectRatio?: string;
+  enabled?: boolean;
 }
 
 const PixelTransition: React.FC<PixelTransitionProps> = ({
@@ -26,7 +27,8 @@ const PixelTransition: React.FC<PixelTransitionProps> = ({
   autoCycle = false,
   className = '',
   style = {},
-  aspectRatio = '100%'
+  aspectRatio = '100%',
+  enabled = true
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const pixelGridRef = useRef<HTMLDivElement | null>(null);
@@ -73,21 +75,21 @@ const PixelTransition: React.FC<PixelTransitionProps> = ({
   }, [gridSize, pixelColor]);
 
   // Handle automatic cycling
-  useEffect(() => {
-    if (autoCycle && contentArray.length > 1) {
-      intervalRef.current = setInterval(() => {
-        if (!isAnimating) {
-          animatePixels();
-        }
-      }, cycleInterval);
-    }
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
+    useEffect(() => {
+      if (autoCycle && contentArray.length > 1 && enabled) {
+        intervalRef.current = setInterval(() => {
+          if (!isAnimating) {
+            animatePixels();
+          }
+        }, cycleInterval);
       }
-    };
-  }, [autoCycle, contentArray, cycleInterval, isAnimating]);
+  
+      return () => {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
+      };
+    }, [autoCycle, contentArray, cycleInterval, isAnimating, enabled]);
 
   const animatePixels = (): void => {
     if (contentArray.length === 0) return;
@@ -168,8 +170,10 @@ const PixelTransition: React.FC<PixelTransitionProps> = ({
         rounded-[15px]
         border-2
         border-white
-        w-[340px]
-        h-[250px]
+        w-[280px]
+        lg:w-[340px] xl:w-[340px]
+        h-[200px]
+        lg:h-[250px] xl:h-[250px]
         relative
         overflow-hidden
       `}

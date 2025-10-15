@@ -261,7 +261,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, cardText = "YOUR TEXT" }: BandProps
             resolution: new THREE.Vector2(1000, isSmall ? 2000 : 100),
             map: texture,
             repeat: new THREE.Vector2(-4, 1),
-            lineWidth: 4
+            lineWidth: isSmall ? 1 : 8
           })}
           attach="material"
         />
