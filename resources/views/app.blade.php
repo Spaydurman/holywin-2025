@@ -5,6 +5,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
+        <meta name="description" content="Level Up you faith to the Holywin 2025 - Level Up">
+
+        <!-- Open Graph Meta Tags -->
+        <meta property="og:title" content="Holywin – Level UP">
+        <meta property="og:description" content="Level Up you faith to the Holywin 2025 - Level Up">
+        <meta property="og:image" content="{{ url('logo/YP logo.png') }}">
+        <meta property="og:type" content="website">
+
         {{-- Inline script to detect system dark mode preference and apply it immediately --}}
         <script>
             (function() {
