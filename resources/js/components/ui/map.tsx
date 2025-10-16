@@ -4,17 +4,18 @@ import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 interface MapProps {
   className?: string;
   style?: React.CSSProperties;
+  isMobile?: boolean;
 }
 
-const Map: React.FC<MapProps> = ({ className, style }) => {
+const Map: React.FC<MapProps> = ({ className, style, isMobile = false }) => {
 
   const mapDetails = {
     id: 1,
     name: 'TSA Pasig',
     lat: 14.563692563429464,
-    lng: 121.07192966944467
+    lng: 121.0719296694467
   };
-  // 14.563692563429464, 121.07192966944467
+  // 14.563692563429464, 121.0719296944467
 
   const mapCenter = {
     lat: 14.563692563429464,
@@ -38,10 +39,28 @@ const Map: React.FC<MapProps> = ({ className, style }) => {
     fullscreenControl: true,
   };
 
-  const { isLoaded } = useJsApiLoader({
+  // Only load Google Maps API when not on mobile
+  const { isLoaded } = !isMobile ? useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
-  });
+  }) : { isLoaded: false };
+
+  // Static map URL for mobile devices
+  const staticMapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${mapCenter.lat},${mapCenter.lng}&zoom=15&size=${Math.round(style?.width ? parseInt(style.width.toString()) : 400)}x${Math.round(style?.height ? parseInt(style.height.toString()) : 400)}&markers=color:red%7Clabel:S%7C${mapCenter.lat},${mapCenter.lng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''}`;
+
+  if (isMobile) {
+    // Return static map for mobile
+    return (
+      <div className={className}>
+        <img 
+          src={staticMapUrl} 
+          alt="Location map" 
+          className="w-full h-full rounded-full object-cover"
+          loading="lazy"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className={className}>

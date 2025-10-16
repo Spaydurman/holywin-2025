@@ -1,52 +1,43 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 interface HalftoneArrowProps {
-    delay?: number;
-    leftPosition?: number;
+  delay?: number;
+  leftPosition?: number;
 }
 
 export default function HalftoneArrow({ delay = 0, leftPosition = 0 }: HalftoneArrowProps) {
-    const [isVisible, setIsVisible] = useState(false);
-    const [animationClass, setAnimationClass] = useState('animate-float');
+  const [visible, setVisible] = useState(false);
+  const [animation, setAnimation] = useState('animate-float');
 
-    useEffect(() => {
-        // Randomly select animation class
-        const animations = [
-            'animate-float',
-            'animate-float-to-top',
-            'animate-float-short',
-        ];
-        const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
-        setAnimationClass(randomAnimation);
+  useEffect(() => {
+    const animations = ['animate-float', 'animate-float-to-top', 'animate-float-short'];
+    setAnimation(animations[Math.floor(Math.random() * animations.length)]);
 
-        // Delay the appearance of the arrow
-        const timer = setTimeout(() => {
-            setIsVisible(true);
-        }, delay);
+    const timer = setTimeout(() => setVisible(true), delay);
+    return () => clearTimeout(timer);
+  }, [delay]);
 
-        return () => clearTimeout(timer);
-    }, [delay]);
+  const style = useMemo(
+    () => ({
+      left: `${Math.min(Math.max(leftPosition, 5), 90)}%`,
+      zIndex: 10,
+    }),
+    [leftPosition]
+  );
 
-    return (
-        <div
-            className={`halftone-arrow fixed bottom-0 ${isVisible ? animationClass : 'opacity-0'}`}
-            style={{ left: `${leftPosition}%` }}
-        >
-            {/* <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="60"
-                height="60"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#3B9BDF"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-            >
-                <path d="m17 11-5-5-5 5"/>
-                <path d="m17 18-5-5-5 5"/>
-            </svg> */}
-            <img className="w-20"  src="/images/Arrow up.png" alt="" />
-        </div>
-    );
+  return (
+    <div
+      className={`halftone-arrow fixed pointer-events-none bottom-[env(safe-area-inset-bottom,1rem)] transition-opacity duration-500 ${
+        visible ? animation : 'opacity-0'
+      }`}
+      style={style}
+    >
+      <img
+        className="w-12 sm:w-16 md:w-20 max-w-[20vw] select-none"
+        src="/images/Arrow up.webp"
+        alt="Floating arrow"
+        loading="lazy"
+      />
+    </div>
+  );
 }

@@ -32,29 +32,32 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
   const containerRef = useRef<HTMLHeadingElement>(null);
 
   const splitText = useMemo(() => {
-    const text = typeof children === 'string' ? children : '';
-    return text.split(/(\s+)/).map((word, index) => {
-      if (word.match(/^\s+$/)) return word;
-      return (
+    const text = typeof children === 'string' ? children : React.Children.toArray(children).join('');
+    return text.split(/(\s+)/).map((word, index) =>
+      word.match(/^\s+$/) ? (
+        word
+      ) : (
         <span className="inline-block word" key={index}>
           {word}
         </span>
-      );
-    });
+      )
+    );
   }, [children]);
 
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
-    const scroller = scrollContainerRef && scrollContainerRef.current ? scrollContainerRef.current : window;
+    const scroller = scrollContainerRef?.current || window;
+    const triggers: ScrollTrigger[] = [];
 
-    gsap.fromTo(
+    // Rotation
+    const rotationTween = gsap.fromTo(
       el,
       { transformOrigin: '0% 50%', rotate: baseRotation },
       {
-        ease: 'none',
         rotate: 0,
+        ease: 'none',
         scrollTrigger: {
           trigger: el,
           scroller,
@@ -64,55 +67,46 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
         }
       }
     );
+    triggers.push(rotationTween.scrollTrigger!);
 
     const wordElements = el.querySelectorAll<HTMLElement>('.word');
 
-    gsap.fromTo(
-      wordElements,
-      { opacity: baseOpacity, willChange: 'opacity' },
-      {
-        ease: 'none',
-        opacity: 1,
-        stagger: 0.05,
-        scrollTrigger: {
-          trigger: el,
-          scroller,
-          start: 'top bottom-=20%',
-          end: wordAnimationEnd,
-          scrub: true
-        }
+    // Combine word opacity & blur in one timeline
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: el,
+        scroller,
+        start: 'top bottom-=20%',
+        end: wordAnimationEnd,
+        scrub: true
       }
-    );
+    });
+
+    tl.fromTo(wordElements, { opacity: baseOpacity }, { opacity: 1, stagger: 0.05, ease: 'none' });
 
     if (enableBlur) {
-      gsap.fromTo(
+      tl.fromTo(
         wordElements,
         { filter: `blur(${blurStrength}px)` },
-        {
-          ease: 'none',
-          filter: 'blur(0px)',
-          stagger: 0.05,
-          scrollTrigger: {
-            trigger: el,
-            scroller,
-            start: 'top bottom-=20%',
-            end: wordAnimationEnd,
-            scrub: true
-          }
-        }
+        { filter: 'blur(0)', stagger: 0.05, ease: 'none' },
+        0
       );
     }
 
+    triggers.push(tl.scrollTrigger!);
+
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      triggers.forEach(t => t.kill());
     };
   }, [scrollContainerRef, enableBlur, baseRotation, baseOpacity, rotationEnd, wordAnimationEnd, blurStrength]);
 
   return (
     <h2 ref={containerRef} className={`my-5 ${containerClassName}`}>
-      <p className={`text-[clamp(1.6rem,4vw,3rem)] leading-[1.5] font-semibold ${textClassName}`}>{splitText}</p>
+      <span className={`block text-[clamp(1.6rem,4vw,3rem)] leading-[1.5] font-semibold ${textClassName}`}>
+        {splitText}
+      </span>
     </h2>
   );
 };
 
-export default ScrollReveal;
+export default React.memo(ScrollReveal);

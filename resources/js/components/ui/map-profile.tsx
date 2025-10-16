@@ -5,7 +5,8 @@ import ProfileCard from "../ui/profile-card";
 import Map from "../ui/map";
 import TargetCursor from "../ui/target-cursor";
 import TextTypeScrambler from "./text-type-scrambler";
-import ScrollReveal from "./scroll-reveal"; 
+import ScrollReveal from "./scroll-reveal";
+import { useIsMobile } from "../../hooks/use-mobile";
 // Hook to detect when an element is in the viewport
 const useOnScreen = (ref: React.RefObject<HTMLElement | null>) => {
   const [isIntersecting, setIntersecting] = useState(false);
@@ -40,6 +41,7 @@ export default function DetailsSection() {
     const speakerContainerRef = useRef<HTMLDivElement>(null);
     const isMapContainerVisible = useOnScreen(mapContainerRef);
     const isSpeakerContainerVisible = useOnScreen(speakerContainerRef);
+    const isMobile = useIsMobile();
 
     const handleMouseEnter = () => {
         setIsMouseOver(true);
@@ -162,11 +164,13 @@ export default function DetailsSection() {
             onMouseLeave={handleMouseLeave}
         >
 
-            <TargetCursor
-                spinDuration={2}
-                hideDefaultCursor={true}
-                isActive={isMouseOver}
-            />
+            {!isMobile && (
+                <TargetCursor
+                    spinDuration={2}
+                    hideDefaultCursor={true}
+                    isActive={isMouseOver}
+                />
+            )}
             <div className="h-screen flex items-center justify-center gap-4">
                 <div className="flex flex-col gap-4" id="map-container" ref={mapContainerRef}>
                     <div className="dashed-circle-border relative z-0">
@@ -199,7 +203,7 @@ export default function DetailsSection() {
                         <ProfileCard
                             name="Oliver"
                             status="Online"
-                            avatarUrl="/images/speaker/oliver.png"
+                            avatarUrl="/images/speaker/oliver.webp"
                             className="cursor-target"
 
 
@@ -211,7 +215,7 @@ export default function DetailsSection() {
                         <ProfileCard
                             name="Jomel"
                             status="Online"
-                            avatarUrl="/images/speaker/jomel.png"
+                            avatarUrl="/images/speaker/jomel.webp"
                             className="cursor-target"
 
                             showUserInfo={false}

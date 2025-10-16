@@ -35,6 +35,7 @@ const PixelTransition: React.FC<PixelTransitionProps> = ({
   const activeRef = useRef<HTMLDivElement | null>(null);
   const delayedCallRef = useRef<gsap.core.Tween | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   // Determine the content array to use
   const contentArray = contents && contents.length > 0
@@ -46,9 +47,33 @@ const PixelTransition: React.FC<PixelTransitionProps> = ({
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [nextIndex, setNextIndex] = useState<number>(1);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const isTouchDevice =
     'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.matchMedia('(pointer: coarse)').matches;
+
+  // Set up Intersection Observer to detect when component is in viewport
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const options = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1 // Trigger when 10% of the element is visible
+    };
+
+    observerRef.current = new IntersectionObserver(([entry]) => {
+      setIsVisible(entry.isIntersecting);
+    }, options);
+
+    observerRef.current.observe(containerRef.current);
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const pixelGridEl = pixelGridRef.current;
@@ -74,14 +99,19 @@ const PixelTransition: React.FC<PixelTransitionProps> = ({
     }
   }, [gridSize, pixelColor]);
 
-  // Handle automatic cycling
+  // Handle automatic cycling only when component is visible
     useEffect(() => {
-      if (autoCycle && contentArray.length > 1 && enabled) {
+      if (autoCycle && contentArray.length > 1 && enabled && isVisible) {
         intervalRef.current = setInterval(() => {
           if (!isAnimating) {
             animatePixels();
           }
         }, cycleInterval);
+      } else {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
       }
   
       return () => {
@@ -89,10 +119,10 @@ const PixelTransition: React.FC<PixelTransitionProps> = ({
           clearInterval(intervalRef.current);
         }
       };
-    }, [autoCycle, contentArray, cycleInterval, isAnimating, enabled]);
+    }, [autoCycle, contentArray, cycleInterval, isAnimating, enabled, isVisible]);
 
   const animatePixels = (): void => {
-    if (contentArray.length === 0) return;
+    if (contentArray.length === 0 || !isVisible) return; // Only animate if component is visible
 
     setIsAnimating(true);
 
@@ -151,13 +181,13 @@ const PixelTransition: React.FC<PixelTransitionProps> = ({
   };
 
   const handleMouseEnter = (): void => {
-    if (!isAnimating && !autoCycle) animatePixels();
+    if (!isAnimating && !autoCycle && isVisible) animatePixels(); // Only animate if visible
   };
   const handleMouseLeave = (): void => {
     // No action on mouse leave for auto cycling
   };
   const handleClick = (): void => {
-    if (!isAnimating && !autoCycle) animatePixels();
+    if (!isAnimating && !autoCycle && isVisible) animatePixels(); // Only animate if visible
   };
 
   return (
