@@ -10,7 +10,7 @@
         <!-- Open Graph Meta Tags -->
         <meta property="og:title" content="Holywin – Level UP">
         <meta property="og:description" content="Level Up you faith to the Holywin 2025 - Level Up">
-        <meta property="og:image" content="{{ url('logo/YP logo.png') }}">
+        <meta property="og:image" content="{{ asset('images/logo/YP logo.svg') }}">
         <meta property="og:type" content="website">
 
         {{-- Inline script to detect system dark mode preference and apply it immediately --}}
