@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import Lanyard from '../ui/lanyard';
 
 interface FormData {
     name: string;
@@ -13,6 +12,7 @@ interface FormData {
     age: string;
     invitedBy: string;
     salvationist: string;
+    mobileNumber: string;
 }
 
 interface RegistrationFormProps {
@@ -26,10 +26,11 @@ export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
         birthday: '',
         age: '',
         invitedBy: '',
-        salvationist: ''
+        salvationist: '',
+        mobileNumber: ''
     });
 
-    const [errors, setErrors] = useState<{name?: string; email?: string; birthday?: string; age?: string; invitedBy?: string; salvationist?: string}>({});
+    const [errors, setErrors] = useState<{name?: string; email?: string; birthday?: string; age?: string; invitedBy?: string; salvationist?: string; mobileNumber?: string}>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitSuccess, setSubmitSuccess] = useState(false);
     const [emailValidationStatus, setEmailValidationStatus] = useState<'valid' | 'invalid' | 'checking' | null>(null);
@@ -60,6 +61,21 @@ export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
             setErrors(prev => ({ ...prev, invitedBy: undefined }));
         } else if (name === 'salvationist' && errors.salvationist) {
             setErrors(prev => ({ ...prev, salvationist: undefined }));
+        } else if (name === 'mobileNumber' && errors.mobileNumber) {
+            setErrors(prev => ({ ...prev, mobileNumber: undefined }));
+        }
+
+        if (name === 'salvationist' && value === 'yes') {
+            setFormData(prev => ({
+                ...prev,
+                invitedBy: '',
+                mobileNumber: ''
+            }));
+            setErrors(prev => ({
+                ...prev,
+                invitedBy: undefined,
+                mobileNumber: undefined
+            }));
         }
 
         if (name === 'email') {
@@ -109,7 +125,7 @@ export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
     };
 
     const validateForm = (): boolean => {
-        const newErrors: {name?: string; email?: string; birthday?: string; age?: string; invitedBy?: string; salvationist?: string} = {};
+        const newErrors: {name?: string; email?: string; birthday?: string; age?: string; invitedBy?: string; salvationist?: string; mobileNumber?: string} = {};
 
         if (!formData.name.trim()) {
             newErrors.name = 'Full name is required';
@@ -140,7 +156,7 @@ export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
                 if (isNaN(birthdayDate.getTime())) {
                     newErrors.birthday = 'Please enter a valid date';
                 } else if (birthdayDate > today) {
-                    newErrors.birthday = 'Birthday cannot be in the future';
+                    newErrors.birthday = 'Please enter the day when you were born';
                 } else if (today.getFullYear() - birthdayDate.getFullYear() > 120) {
                     newErrors.birthday = 'Please enter a realistic birthday';
                 }
@@ -154,10 +170,23 @@ export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
                 newErrors.age = 'Age must be a whole number';
             } else {
                 const ageNum = parseInt(formData.age, 10);
-                if (ageNum < 1) {
-                    newErrors.age = 'Age must be at least 1';
-                } else if (ageNum > 120) {
-                    newErrors.age = 'Age must be 120 or less';
+                if (formData.birthday) {
+                    const birthdayDate = new Date(formData.birthday);
+                    const today = new Date();
+                    let calculatedAge = today.getFullYear() - birthdayDate.getFullYear();
+                    const monthDiff = today.getMonth() - birthdayDate.getMonth();
+
+                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthdayDate.getDate())) {
+                        calculatedAge--;
+                    }
+
+                    if (Math.abs(calculatedAge - ageNum) > 1) {
+                        newErrors.age = `Age does not match your birthday`;
+                    }
+                } else if (ageNum < 13) {
+                    newErrors.age = 'Age must be at least 13 years old';
+                } else if (ageNum > 35) {
+                    newErrors.age = 'Age must be 35 years old or less';
                 }
             }
         }
@@ -173,6 +202,16 @@ export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
                 newErrors.invitedBy = 'Invited by name must be at least 2 characters';
             }
         }
+
+        if (formData.salvationist === 'no' && !formData.mobileNumber.trim()) {
+            newErrors.mobileNumber = 'Mobile number is required';
+        } else if (formData.mobileNumber.trim()) {
+            const mobileRegex = /^(09\d{9}|\+639\d{9})$/;
+            if (!mobileRegex.test(formData.mobileNumber.trim())) {
+                newErrors.mobileNumber = 'Please enter a valid mobile number (e.g., 09123456789 or +639123456789)';
+            }
+        }
+
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -191,7 +230,8 @@ export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
                     birthday: formData.birthday,
                     age: formData.age,
                     invited_by: formData.invitedBy,
-                    salvationist: formData.salvationist
+                    salvationist: formData.salvationist,
+                    mobile_number: formData.mobileNumber
                 });
 
                 console.log('Registration successful:', response.data);
@@ -208,7 +248,8 @@ export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
                         birthday: '',
                         age: '',
                         invitedBy: '',
-                        salvationist: ''
+                        salvationist: '',
+                        mobileNumber: ''
                     });
 
                     setEmailValidationStatus(null);
@@ -377,10 +418,25 @@ export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
                                             {errors.invitedBy && <p className="text-red-500 text-sm">{errors.invitedBy}</p>}
                                         </div>
                                     )}
+
+                                    {formData.salvationist === 'no' && (
+                                        <div className="space-y-2">
+                                            <Label htmlFor="mobileNumber">Mobile Number *</Label>
+                                            <Input
+                                                id="mobileNumber"
+                                                name="mobileNumber"
+                                                value={formData.mobileNumber}
+                                                onChange={handleInputChange}
+                                                placeholder="Enter your mobile number (e.g., 09123456789 or +639123456789)"
+                                                className={errors.mobileNumber ? 'border-red-500' : ''}
+                                            />
+                                            {errors.mobileNumber && <p className="text-red-500 text-sm">{errors.mobileNumber}</p>}
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="flex justify-center pt-4">
-                                    <Button type="submit" size="lg" disabled={isSubmitting}>
+                                    <Button type="submit" size="lg" className='cursor-pointer' disabled={isSubmitting}>
                                         {isSubmitting ? 'Submitting...' : 'Submit Registration'}
                                     </Button>
                                 </div>

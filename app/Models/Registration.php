@@ -21,6 +21,7 @@ class Registration extends Model
         'age',
         'invited_by',
         'salvationist',
+        'mobile_number',
     ];
 
     /**

@@ -18,16 +18,43 @@ class RegistrationController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|min:2|max:255',
             'email' => 'required|email|unique:registrations,email|max:255',
-            'birthday' => 'required|date|date_format:Y-m-d|before:today',
-            'age' => 'required|integer|min:1|max:120',
+            'birthday' => 'required|date_format:Y-m-d|before:today|after:120 years ago|before:12 years ago',
+            'age' => 'required|integer|min:13|max:35',
             'invited_by' => 'nullable|string|min:2|max:255',
             'salvationist' => 'required|in:yes,no',
+            'mobile_number' => 'nullable|string|max:15',
         ]);
 
-        if ($validatedData['salvationist'] === 'no' && (empty($validatedData['invited_by']) || strlen(trim($validatedData['invited_by'])) < 2)) {
-            throw ValidationException::withMessages([
-                'invited_by' => ['The invited by field is required when you are not a salvationist.']
-            ]);
+        if ($validatedData['salvationist'] === 'no') {
+            if (empty($validatedData['invited_by']) || strlen(trim($validatedData['invited_by'])) < 2) {
+                throw ValidationException::withMessages([
+                    'invited_by' => ['The invited by field is required when you are not a salvationist.']
+                ]);
+            }
+
+            if (empty($validatedData['mobile_number'])) {
+                throw ValidationException::withMessages([
+                    'mobile_number' => ['Mobile number is required when you are not a salvationist.']
+                ]);
+            }
+
+            if (!preg_match('/^(09\d{9}|\+639\d{9})$/', $validatedData['mobile_number'])) {
+                throw ValidationException::withMessages([
+                    'mobile_number' => ['Please enter a valid Philippine mobile number (e.g., 09123456789 or +639123456789).']
+                ]);
+            }
+        }
+
+        if (!empty($validatedData['birthday']) && !empty($validatedData['age'])) {
+            $birthday = new \DateTime($validatedData['birthday']);
+            $today = new \DateTime();
+            $calculatedAge = $today->diff($birthday)->y;
+
+            if (abs($calculatedAge - $validatedData['age']) > 1) {
+                throw ValidationException::withMessages([
+                    'age' => ["Age does not match your birthday."]
+                ]);
+            }
         }
 
         if ($validatedData['salvationist'] === 'yes') {

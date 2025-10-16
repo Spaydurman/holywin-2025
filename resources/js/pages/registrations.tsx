@@ -137,6 +137,7 @@ const RegistrationsPage = () => {
                 <TableHead>Birthday</TableHead>
                 <TableHead>Age</TableHead>
                 <TableHead>Invited By</TableHead>
+                <TableHead>Mobile Number</TableHead>
                 <TableHead>Salvationist</TableHead>
                 <TableHead>Registered At</TableHead>
                 </TableRow>
@@ -160,6 +161,7 @@ const RegistrationsPage = () => {
                     <TableCell>{formatDate(registration.birthday)}</TableCell>
                     <TableCell>{registration.age}</TableCell>
                     <TableCell>{registration.invited_by || '-'}</TableCell>
+                    <TableCell>{registration.mobile_number || '-'}</TableCell>
                     <TableCell>{registration.salvationist === 'yes' ? 'Yes' : 'No'}</TableCell>
                     <TableCell>{formatDate(registration.created_at)}</TableCell>
                     </TableRow>
