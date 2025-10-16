@@ -5,15 +5,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <meta name="description" content="Level Up you faith to the Holywin 2025 - Level Up">
+        <meta name="description" content="Join now and Level Up your faith to the Holywin 2025 - Level Up">
 
-        <!-- Open Graph Meta Tags -->
         <meta property="og:title" content="Holywin – Level UP">
-        <meta property="og:description" content="Level Up you faith to the Holywin 2025 - Level Up">
-        <meta property="og:image" content="{{ asset('images/logo/YP logo.svg') }}">
+        <meta property="og:description" content="Join now and Level Up your faith to the Holywin 2025 - Level Up">
+        <meta property="og:image" content="{{ asset('images/logo/YP logo.jpg') }}">
         <meta property="og:type" content="website">
 
-        {{-- Inline script to detect system dark mode preference and apply it immediately --}}
         <script>
             (function() {
                 const appearance = '{{ $appearance ?? "system" }}';
@@ -28,7 +26,6 @@
             })();
         </script>
 
-        {{-- Inline style to set the HTML background color based on our theme in app.css --}}
         <style>
             html {
                 background-color: oklch(1 0 0);
