@@ -186,7 +186,6 @@ export default function DetailsSection() {
                             ]}
                                 speed={60}
                                 scrambleSpeed={40}
-                                onComplete={() => console.log("Location details complete!")}
                                 className="text-base sm:text-lg font-mono text-white text-center"
                                 isActive={isMapContainerVisible}
                         />
@@ -210,7 +209,6 @@ export default function DetailsSection() {
                             showUserInfo={false}
                             enableTilt={true}
                             enableMobileTilt={false}
-                            onContactClick={() => console.log('Contact clicked')}
                         />
                         <ProfileCard
                             name="Jomel"
@@ -221,7 +219,6 @@ export default function DetailsSection() {
                             showUserInfo={false}
                             enableTilt={true}
                             enableMobileTilt={false}
-                            onContactClick={() => console.log('Contact clicked')}
                         />
                 </div>
             </div>

@@ -234,7 +234,6 @@ export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
                     mobile_number: formData.mobileNumber
                 });
 
-                console.log('Registration successful:', response.data);
                 setSubmitSuccess(true);
 
                 if (onSuccess) {
