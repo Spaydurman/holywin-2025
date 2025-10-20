@@ -37,7 +37,7 @@ export default function Landing() {
     }
   }, [scrollPosition]);
 
-  const handleNavigate = (section) => {
+  const handleNavigate = (section: string) => {
     setActiveSection(section);
     const element = document.getElementById(section);
     if (element) {
@@ -64,6 +64,20 @@ export default function Landing() {
           ))}
         </div>
 
+        {/* Pixelated Vintage Game Button for Registration */}
+        <div className="absolute top-8 right-8 z-50">
+          <button
+            onClick={() => handleNavigate('registration')}
+            className="relative group overflow-visible"
+            aria-label="Go to registration section"
+          >
+            <div className="absolute -inset-1 bg-cyan-400 opacity-75 group-hover:opacity-100 transition duration-300 blur transform scale-110"></div>
+            <div className="relative bg-black text-cyan-40 font-bold py-2 px-4 border-2 border-cyan-600 rounded-xs transform transition-all duration-200 hover:scale-105 active:scale-95 font-mono text-xs md:text-sm tracking-wider uppercase">
+              <span className="block text-cyan-300 vt323 text-xl cursor-pointer" >REGISTER</span>
+            </div>
+          </button>
+        </div>
+
         {isClient ? (
           <Suspense fallback={<LoadingSpinner />}>
             <section id="home" className="w-full">
@@ -79,7 +93,7 @@ export default function Landing() {
             </section>
 
             <section id="registration" className="w-full">
-              <RegistrationSection onNavigate={handleNavigate} />
+              <RegistrationSection />
             </section>
           </Suspense>
         ) : (
