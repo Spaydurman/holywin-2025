@@ -10,9 +10,6 @@ use Illuminate\Validation\ValidationException;
 
 class RegistrationController extends Controller
 {
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request): JsonResponse
     {
         $validatedData = $request->validate([
@@ -69,9 +66,6 @@ class RegistrationController extends Controller
         ], 201);
     }
 
-    /**
-     * Check if an email already exists.
-     */
     public function checkEmail(Request $request): JsonResponse
     {
         $request->validate([
@@ -86,9 +80,6 @@ class RegistrationController extends Controller
         ]);
     }
 
-    /**
-     * Get the total number of registrations.
-     */
     public function getCount(): JsonResponse
     {
         $count = Registration::count();
@@ -98,14 +89,10 @@ class RegistrationController extends Controller
         ]);
     }
 
-    /**
-     * Display a listing of the resource with search, pagination and per page options.
-     */
     public function index(Request $request): JsonResponse
     {
         $query = Registration::query();
 
-        // Search functionality
         if ($request->has('search') && $request->search) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -116,10 +103,8 @@ class RegistrationController extends Controller
             });
         }
 
-        // Sort by created_at descending by default
         $query->orderBy('created_at', 'desc');
-
-        // Pagination with per page option
+        
         $perPage = $request->get('per_page', 10);
         $page = $request->get('page', 1);
 
@@ -135,6 +120,45 @@ class RegistrationController extends Controller
                 'from' => $registrations->firstItem(),
                 'to' => $registrations->lastItem(),
             ]
+        ]);
+    }
+    
+    public function generateUids(): JsonResponse
+    {
+        $registrations = Registration::whereNull('uid')->get();
+        $count = 0;
+        
+        foreach ($registrations as $registration) {
+            $registration->uid = Registration::generateUniqueUid();
+            $registration->save();
+            $count++;
+        }
+        
+        $emptyUidRegistrations = Registration::where('uid', '')->get();
+        foreach ($emptyUidRegistrations as $registration) {
+            $registration->uid = Registration::generateUniqueUid();
+            $registration->save();
+            $count++;
+        }
+        
+        return response()->json([
+            'message' => "Successfully generated UIDs for {$count} registrations.",
+            'count' => $count
+        ]);
+    }
+    
+    public function getByUid(string $uid): JsonResponse
+    {
+        $registration = Registration::where('uid', $uid)->first();
+        
+        if (!$registration) {
+            return response()->json([
+                'message' => 'Registration not found.'
+            ], 404);
+        }
+        
+        return response()->json([
+            'data' => $registration
         ]);
     }
 }
