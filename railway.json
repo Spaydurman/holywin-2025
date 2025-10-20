@@ -4,7 +4,7 @@
     "nixpacksPlan": {
       "phases": {
         "setup": {
-          "nixPkgs": ["php82", "php82Extensions.gd", "php82Extensions.intl", "php82Extensions.mbstring", "php82Extensions.exif", "php82Extensions.zip", "php82Extensions.curl", "composer", "nodejs"]
+          "nixPkgs": ["php82", "php82Extensions.gd", "php82Extensions.intl", "php82Extensions.mbstring", "php82Extensions.exif", "php82Extensions.zip", "php82Extensions.curl", "php82Packages.composer", "nodejs"]
         },
         "install": {
           "cmd": "composer install --no-dev --optimize-autoloader && npm install"
