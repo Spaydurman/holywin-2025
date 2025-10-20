@@ -1,0 +1,19 @@
+{
+  "build": {
+    "builder": "NIXPACKS",
+    "nixpacksPlan": {
+      "phases": {
+        "setup": {
+          "nixPkgs": ["php82", "php82Extensions.gd", "php82Extensions.intl", "php82Extensions.mbstring", "php82Extensions.exif", "php82Extensions.zip", "php82Extensions.curl", "composer", "nodejs"]
+        },
+        "install": {
+          "cmd": "composer install --no-dev --optimize-autoloader && npm install"
+        },
+        "build": {
+          "cmd": "npm run build"
+        }
+      },
+      "start": "php artisan serve --host=0.0.0.0 --port=$PORT"
+    }
+  }
+}
