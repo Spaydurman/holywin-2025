@@ -12,24 +12,26 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { type BreadcrumbItem } from '@/types';
 
 
-interface Registration {
-  id: number;
-  name: string;
-  email: string;
-  birthday: string;
-  age: number;
-  invited_by: string | null;
-  salvationist: string;
-  created_at: string;
-}
-
 interface Pagination {
   current_page: number;
-  last_page: number;
+ last_page: number;
   per_page: number;
   total: number;
   from: number;
   to: number;
+}
+
+interface Registration {
+  id: number;
+  name: string;
+ email: string;
+  birthday: string;
+  age: number;
+  invited_by: string | null;
+  salvationist: string;
+  mobile_number: string | null;
+  uid: string | null;
+  created_at: string;
 }
 
 interface RegistrationsResponse {
@@ -38,12 +40,13 @@ interface RegistrationsResponse {
 }
 
 const RegistrationsPage = () => {
-  const [registrationsData, setRegistrationsData] = useState<Registration[]>([]);
+ const [registrationsData, setRegistrationsData] = useState<Registration[]>([]);
   const [pagination, setPagination] = useState<Pagination | null>(null);
-  const [search, setSearch] = useState('');
+ const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
+ const [generatingUids, setGeneratingUids] = useState(false);
 
   const fetchRegistrations = async () => {
     setLoading(true);
@@ -72,12 +75,12 @@ const RegistrationsPage = () => {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
-    setPage(1); // Reset to first page when searching
+    setPage(1);
   };
 
   const handlePerPageChange = (value: string) => {
     setPerPage(Number(value));
-    setPage(1); // Reset to first page when changing per page
+    setPage(1);
   };
 
   const handlePageChange = (newPage: number) => {
@@ -102,31 +105,48 @@ const RegistrationsPage = () => {
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Registrations" />
       <div className="container mx-auto py-10 p-8">
-
-        <CardContent>
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <div className="flex-1">
-            <Input
-                placeholder="Search registrations..."
-                value={search}
-                onChange={handleSearchChange}
-                className="max-w-md"
-            />
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Registrations</CardTitle>
+            <div className="flex flex-col sm:flex-row gap-2 sm:space-x-2 sm:gap-0">
+              <Button
+                onClick={handleExportExcel}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                Export to Excel
+              </Button>
+              <Button
+                onClick={handleGenerateUids}
+                disabled={generatingUids}
+              >
+                {generatingUids ? 'Generating...' : 'Generate All UIDs'}
+              </Button>
             </div>
-            <div className="w-32">
-            <Select value={perPage.toString()} onValueChange={handlePerPageChange}>
-                <SelectTrigger>
-                <SelectValue placeholder="Per page" />
-                </SelectTrigger>
-                <SelectContent>
-                <SelectItem value="5">5 per page</SelectItem>
-                <SelectItem value="10">10 per page</SelectItem>
-                <SelectItem value="20">20 per page</SelectItem>
-                <SelectItem value="50">50 per page</SelectItem>
-                </SelectContent>
-            </Select>
-            </div>
-        </div>
+          </CardHeader>
+          <CardContent>
+          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+              <div className="flex-1">
+              <Input
+                  placeholder="Search registrations..."
+                  value={search}
+                  onChange={handleSearchChange}
+                  className="max-w-md"
+              />
+              </div>
+              <div className="w-32">
+              <Select value={perPage.toString()} onValueChange={handlePerPageChange}>
+                  <SelectTrigger>
+                  <SelectValue placeholder="Per page" />
+                  </SelectTrigger>
+                  <SelectContent>
+                  <SelectItem value="5">5 per page</SelectItem>
+                  <SelectItem value="10">10 per page</SelectItem>
+                  <SelectItem value="20">20 per page</SelectItem>
+                  <SelectItem value="50">50 per page</SelectItem>
+                  </SelectContent>
+              </Select>
+              </div>
+          </div>
 
         <div className="rounded-md border">
             <Table>
@@ -139,13 +159,14 @@ const RegistrationsPage = () => {
                 <TableHead>Invited By</TableHead>
                 <TableHead>Mobile Number</TableHead>
                 <TableHead>Salvationist</TableHead>
+                <TableHead>UID</TableHead>
                 <TableHead>Registered At</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
                 {loading ? (
                 <TableRow>
-                    <TableCell colSpan={7}>
+                    <TableCell colSpan={8}>
                     <div className="flex flex-col gap-2">
                         {[...Array(5)].map((_, i) => (
                         <Skeleton key={i} className="h-12 w-full" />
@@ -163,12 +184,13 @@ const RegistrationsPage = () => {
                     <TableCell>{registration.invited_by || '-'}</TableCell>
                     <TableCell>{registration.mobile_number || '-'}</TableCell>
                     <TableCell>{registration.salvationist === 'yes' ? 'Yes' : 'No'}</TableCell>
+                    <TableCell>{registration.uid || '-'}</TableCell>
                     <TableCell>{formatDate(registration.created_at)}</TableCell>
                     </TableRow>
                 ))
                 ) : (
                 <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8">
+                    <TableCell colSpan={8} className="text-center py-8">
                     No registrations found
                     </TableCell>
                 </TableRow>
@@ -177,7 +199,6 @@ const RegistrationsPage = () => {
             </Table>
         </div>
 
-        {/* Pagination */}
         {!loading && pagination && (
             <div className="flex flex-col sm:flex-row items-center justify-between mt-6 gap-4">
             <div className="text-sm text-gray-600">
@@ -232,9 +253,53 @@ const RegistrationsPage = () => {
             </div>
         )}
         </CardContent>
+      </Card>
       </div>
     </AppLayout>
   );
+  
+  async function handleGenerateUids() {
+    if (!confirm('This will generate UIDs for all registrations that don\'t have one. Continue?')) {
+      return;
+    }
+    
+    setGeneratingUids(true);
+    try {
+      const response = await fetch(
+        registrationsAPI.generateUids().url,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+          },
+        }
+      );
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        alert(result.message);
+        fetchRegistrations();
+      } else {
+        alert('Error: ' + (result.message || 'Failed to generate UIDs'));
+      }
+    } catch (error) {
+      console.error('Error generating UIDs:', error);
+      alert('Error: Failed to generate UIDs');
+    } finally {
+      setGeneratingUids(false);
+    }
+ }
+  
+  async function handleExportExcel() {
+    try {
+      window.open(registrationsAPI.export().url, '_blank');
+    } catch (error) {
+      console.error('Error exporting to Excel:', error);
+      alert('Error: Failed to export data to Excel');
+    }
+  }
 };
 
 export default RegistrationsPage;
