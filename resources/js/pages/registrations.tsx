@@ -108,12 +108,20 @@ const RegistrationsPage = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Registrations</CardTitle>
-            <Button
-              onClick={handleGenerateUids}
-              disabled={generatingUids}
-            >
-              {generatingUids ? 'Generating...' : 'Generate All UIDs'}
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-2 sm:space-x-2 sm:gap-0">
+              <Button
+                onClick={handleExportExcel}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                Export to Excel
+              </Button>
+              <Button
+                onClick={handleGenerateUids}
+                disabled={generatingUids}
+              >
+                {generatingUids ? 'Generating...' : 'Generate All UIDs'}
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
@@ -281,6 +289,15 @@ const RegistrationsPage = () => {
       alert('Error: Failed to generate UIDs');
     } finally {
       setGeneratingUids(false);
+    }
+ }
+  
+  async function handleExportExcel() {
+    try {
+      window.open(registrationsAPI.export().url, '_blank');
+    } catch (error) {
+      console.error('Error exporting to Excel:', error);
+      alert('Error: Failed to export data to Excel');
     }
   }
 };

@@ -161,4 +161,85 @@ class RegistrationController extends Controller
             'data' => $registration
         ]);
     }
+    
+    public function exportExcel()
+    {
+        // Get all registrations
+        $registrations = Registration::orderBy('created_at', 'desc')->get();
+        
+        // Create a temporary file
+        $fileName = 'registrations_' . date('Y-m-d_H-i-s') . '.xlsx';
+        
+        // Convert the collection to an array with proper headers
+        $data = [];
+        $data[] = [
+            'UID',
+            'Name',
+            'Email',
+            'Birthday',
+            'Age',
+            'Invited By',
+            'Salvationist',
+            'Mobile Number',
+            'Created At'
+        ];
+        
+        foreach ($registrations as $registration) {
+            $data[] = [
+                $registration->uid,
+                $registration->name,
+                $registration->email,
+                $registration->birthday ? $registration->birthday->format('Y-m-d') : '',
+                $registration->age,
+                $registration->invited_by,
+                $registration->salvationist,
+                $registration->mobile_number,
+                $registration->created_at ? $registration->created_at->format('Y-m-d H:i:s') : ''
+            ];
+        }
+        
+        // Create the Excel file using PHP Spreadsheet directly
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        
+        // Add the data to the sheet
+        $sheet->fromArray($data, null, 'A1');
+        
+        // Set column widths
+        $sheet->getColumnDimension('A')->setWidth(20); // ID
+        $sheet->getColumnDimension('B')->setWidth(25); // Name
+        $sheet->getColumnDimension('C')->setWidth(30); // Email
+        $sheet->getColumnDimension('D')->setWidth(15); // Birthday
+        $sheet->getColumnDimension('E')->setWidth(10); // Age
+        $sheet->getColumnDimension('F')->setWidth(20); // Invited By
+        $sheet->getColumnDimension('G')->setWidth(15); // Salvationist
+        $sheet->getColumnDimension('H')->setWidth(15); // Mobile Number
+        $sheet->getColumnDimension('I')->setWidth(15); // UID
+        $sheet->getColumnDimension('J')->setWidth(20); // Created At
+        
+        // Set header row style
+        $headerStyle = [
+            'font' => [
+                'bold' => true,
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => [
+                    'rgb' => 'E6E6E6',
+                ],
+            ],
+        ];
+        
+        $sheet->getStyle('A1:J1')->applyFromArray($headerStyle);
+        
+        // Create the writer
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        
+        // Save to temporary file
+        $tempFile = tempnam(sys_get_temp_dir(), 'registration_export_');
+        $writer->save($tempFile);
+        
+        // Return the file as a download response
+        return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
+    }
 }
