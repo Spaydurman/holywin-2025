@@ -432,3 +432,4 @@
     border-top: 2px dashed #fff;
     border-right: 2px dashed #fff;
 }
+@import './profile-card-mobile.css';

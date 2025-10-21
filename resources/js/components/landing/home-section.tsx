@@ -3,6 +3,7 @@ import RandomizeText from '@/components/landing/randomize-text';
 import HalftoneArrow from '@/components/landing/halftone-arrow';
 // import GridDistortion from '@/components/background/grid-distortion';
 import PixelBlast from '@/components/background/pixel';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface HomeSectionProps {
     activeSection?: string;
@@ -13,6 +14,7 @@ export default function HomeSection({ activeSection }: HomeSectionProps) {
     const [arrows, setArrows] = useState<Array<{id: number, left: number, delay: number}>>([]);
     const [isVisible, setIsVisible] = useState(false);
     const sectionRef = useRef<HTMLDivElement>(null);
+    const isMobile = useIsMobile();
 
     useEffect(() => {
         const sectionElement = sectionRef.current;
@@ -140,25 +142,29 @@ export default function HomeSection({ activeSection }: HomeSectionProps) {
             </div>
 
             <div className="absolute inset-0 w-full h-full z-0">
-                <PixelBlast
-                    variant="triangle"
-                    pixelSize={6}
-                    color="#B19EEF"
-                    patternScale={3}
-                    patternDensity={1.2}
-                    pixelSizeJitter={0.5}
-                    enableRipples
-                    rippleSpeed={0.4}
-                    rippleThickness={0.12}
-                    rippleIntensityScale={1.5}
-                    liquid
-                    liquidStrength={0.12}
-                    liquidRadius={1.2}
-                    liquidWobbleSpeed={5}
-                    speed={0.6}
-                    edgeFade={0.25}
-                    transparent
-                />
+                
+                {!isMobile && (
+                      <PixelBlast
+                        variant="triangle"
+                        pixelSize={6}
+                        color="#B19EEF"
+                        patternScale={3}
+                        patternDensity={1.2}
+                        pixelSizeJitter={0.5}
+                        enableRipples
+                        rippleSpeed={0.4}
+                        rippleThickness={0.12}
+                        rippleIntensityScale={1.5}
+                        liquid
+                        liquidStrength={0.12}
+                        liquidRadius={1.2}
+                        liquidWobbleSpeed={5}
+                        speed={0.6}
+                        edgeFade={0.25}
+                        transparent
+                    />
+                )}
+              
             </div>
 
             <div className="max-w-7xl w-full text-center px-4">
@@ -169,8 +175,6 @@ export default function HomeSection({ activeSection }: HomeSectionProps) {
                     </h1>
                 </div>
             </div>
-
-
         </div>
     );
 }
