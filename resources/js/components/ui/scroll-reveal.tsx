@@ -102,7 +102,7 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
 
   return (
     <h2 ref={containerRef} className={`my-5 ${containerClassName}`}>
-      <span className={`block text-[clamp(1.6rem,4vw,3rem)] leading-[1.5] font-semibold ${textClassName}`}>
+      <span className={`block text-[clamp(1.6rem,4vw,3rem)] leading-[1.5] font-semibold text-white ${textClassName}`}>
         {splitText}
       </span>
     </h2>

@@ -277,9 +277,9 @@ export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
     };
 
     return (
-        <div className='max-w-6xl w-full flex items-center justify-center flex-col'>
+        <div className='max-w-6xl w-full flex items-center justify-center flex-col text-white'>
             <div className="max-w-6xl w-full">
-                <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">Register Now</h2>
+                <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-white">Register Now</h2>
                 <p className="text-xl text-muted-foreground text-center mb-12">
                     Join our community and worship with us
                 </p>
@@ -435,7 +435,7 @@ export default function RegistrationForm({ onSuccess }: RegistrationFormProps) {
                                 </div>
 
                                 <div className="flex justify-center pt-4">
-                                    <Button type="submit" size="lg" className='cursor-pointer' disabled={isSubmitting}>
+                                    <Button type="submit" size="lg" className='cursor-pointer text-black border border-black' disabled={isSubmitting}>
                                         {isSubmitting ? 'Submitting...' : 'Submit Registration'}
                                     </Button>
                                 </div>
