@@ -1,0 +1,222 @@
+.pc-mobile-card-wrapper {
+  width: 100%;
+  max-width: 380px;
+  margin: 0 auto;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.pc-mobile-card {
+  height: 450px;
+  width: 100%;
+  border-radius: 20px;
+  position: relative;
+  background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%);
+  overflow: hidden;
+  box-shadow:
+    0 0 15px rgba(0, 100, 0, 0.5), /* Military green glow */
+    0 0 30px rgba(0, 80, 0, 0.3); /* Additional glow */
+  border: rgba(0, 80, 0) 2px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pc-mobile-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2;
+}
+
+.pc-mobile-avatar-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.pc-mobile-avatar {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  /* Removed box-shadow for better performance on low-end devices */
+}
+
+.pc-mobile-details {
+  text-align: center;
+  margin: 15px 0;
+  flex: 0.8;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.pc-mobile-name {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: white;
+  /* Removed text-shadow for better performance on low-end devices */
+}
+
+.pc-mobile-title {
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.pc-mobile-user-info {
+  margin-top: auto;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: none; /* Removed for low-end device compatibility */
+  -webkit-backdrop-filter: none; /* Removed for low-end device compatibility */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.pc-mobile-user-details {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.pc-mobile-mini-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.pc-mobile-mini-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.pc-mobile-user-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.pc-mobile-handle {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  line-height: 1;
+}
+
+.pc-mobile-status {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  line-height: 1;
+}
+
+.pc-mobile-contact-btn {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.1);
+  /* Removed transition for better performance on low-end devices */
+  flex-shrink: 0;
+}
+
+.pc-mobile-contact-btn:active {
+  background: rgba(25, 255, 255, 0.2);
+  /* Removed transform for better performance on low-end devices */
+}
+
+/* Optimized for low-end devices */
+@media (max-width: 768px) {
+  .pc-mobile-card {
+    height: 400px;
+  }
+  
+  .pc-mobile-name {
+    font-size: 1.6rem;
+  }
+  
+  .pc-mobile-title {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .pc-mobile-card {
+    height: 350px;
+  }
+  
+  .pc-mobile-name {
+    font-size: 1.4rem;
+  }
+  
+  .pc-mobile-user-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .pc-mobile-contact-btn {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .pc-mobile-user-details {
+    width: 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  .pc-mobile-card {
+    height: 320px;
+  }
+  
+  .pc-mobile-name {
+    font-size: 1.2rem;
+  }
+  
+  .pc-mobile-title {
+    font-size: 0.8rem;
+  }
+  
+  .pc-mobile-handle {
+    font-size: 12px;
+  }
+  
+  .pc-mobile-status {
+    font-size: 10px;
+  }
+}
+
+/* Reduced animations for low-end devices */
+@media (prefers-reduced-motion: reduce) {
+  .pc-mobile-contact-btn:active {
+    transform: none;
+  }
+}
