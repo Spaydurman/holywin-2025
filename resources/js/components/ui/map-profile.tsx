@@ -200,7 +200,7 @@ export default function DetailsSection() {
                 </div>
                 <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12">
                         <ProfileCard
-                            name="Oliver"
+                            name="Oliver Sanchez"
                             status="Online"
                             avatarUrl="/images/speaker/oliver.webp"
                             className="cursor-target"
@@ -211,9 +211,9 @@ export default function DetailsSection() {
                             enableMobileTilt={false}
                         />
                         <ProfileCard
-                            name="Jomel"
+                            name="Hannah Bautista"
                             status="Online"
-                            avatarUrl="/images/speaker/jomel.webp"
+                            avatarUrl="/images/speaker/hannah.webp"
                             className="cursor-target"
 
                             showUserInfo={false}
