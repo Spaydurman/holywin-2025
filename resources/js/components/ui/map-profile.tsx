@@ -213,7 +213,7 @@ export default function DetailsSection() {
                         <ProfileCard
                             name="Hannah Bautista"
                             status="Online"
-                            avatarUrl="/images/speaker/hannah.webp"
+                            avatarUrl="/images/speaker/Hannah.webp"
                             className="cursor-target"
 
                             showUserInfo={false}
