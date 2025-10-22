@@ -2,7 +2,7 @@ import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { dashboard, registrations } from '@/routes';
+import { dashboard, registrations, sideQuest } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, Users } from 'lucide-react';
@@ -18,6 +18,11 @@ const mainNavItems: NavItem[] = [
         title: 'Registrations',
         href: registrations(),
         icon: Users,
+    },
+    {
+        title: 'Side Quest',
+        href: sideQuest(),
+        icon: BookOpen,
     },
 ];
 

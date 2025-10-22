@@ -20,6 +20,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('registrations', function () {
         return Inertia::render('registrations');
     })->name('registrations');
+
+    Route::get('side-quest', function () {
+        return Inertia::render('side-quest');
+    })->name('side-quest');
+    
+    // Side Quest API routes
+    Route::prefix('admin')->group(function () {
+        Route::get('side-quest-headers', [\App\Http\Controllers\SideQuestController::class, 'index']);
+        Route::post('side-quest-headers', [\App\Http\Controllers\SideQuestController::class, 'storeHeader']);
+        Route::put('side-quest-headers/{header}', [\App\Http\Controllers\SideQuestController::class, 'updateHeader']);
+        Route::delete('side-quest-headers/{header}', [\App\Http\Controllers\SideQuestController::class, 'destroyHeader']);
+        
+        Route::post('side-quest-lines', [\App\Http\Controllers\SideQuestController::class, 'storeLine']);
+        Route::put('side-quest-lines/{line}', [\App\Http\Controllers\SideQuestController::class, 'updateLine']);
+        Route::delete('side-quest-lines/{line}', [\App\Http\Controllers\SideQuestController::class, 'destroyLine']);
+    });
 });
 
 
