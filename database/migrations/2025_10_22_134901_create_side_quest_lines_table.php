@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('side_quest_lines', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('header_id')->constrained('side_quest_headers')->onDelete('cascade');
+            $table->foreignId('header_id');
             $table->string('input_type');
             $table->string('placeholder')->nullable();
             $table->boolean('is_question')->default(false);

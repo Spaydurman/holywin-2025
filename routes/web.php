@@ -55,6 +55,7 @@ Route::prefix('game')->group(function () {
     Route::post('logout', [\App\Http\Controllers\GameAuthController::class, 'logout'])->name('game.logout');
     
     Route::get('side-quest', [\App\Http\Controllers\GameAuthController::class, 'showSideQuest'])->name('game.side-quest')->middleware('game.auth');
+    Route::get('side-quest/form/{header}', [\App\Http\Controllers\GameAuthController::class, 'showSideQuestForm'])->name('game.side-quest-form')->middleware('game.auth');
 });
 
 require __DIR__.'/settings.php';

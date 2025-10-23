@@ -5,6 +5,21 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { router } from '@inertiajs/react';
 
+interface SideQuestLine {
+    id: number;
+    input_type: string;
+    placeholder: string;
+    is_question: boolean;
+    validation_rule: string;
+    points: number;
+}
+
+interface SideQuestHeader {
+    id: number;
+    question: string;
+    lines: SideQuestLine[];
+}
+
 interface GameSideQuestProps {
     game_user?: {
         id: number;
@@ -17,11 +32,17 @@ interface GameSideQuestProps {
         salvationist?: string;
         mobile_number?: string;
     };
+    headers: SideQuestHeader[];
 }
 
-export default function GameSideQuest({ game_user }: GameSideQuestProps) {
+export default function GameSideQuest({ game_user, headers }: GameSideQuestProps) {
     const handleLogout = () => {
         router.post('/game/logout');
+    };
+
+    const handleStartQuest = (headerId: number) => {
+        // Redirect to the form for the specific quest
+        router.get(`/game/side-quest/form/${headerId}`);
     };
 
     return (
@@ -104,22 +125,25 @@ export default function GameSideQuest({ game_user }: GameSideQuestProps) {
                     </Card>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {[1, 2, 3].map((quest) => (
+                        {headers.map((header) => (
                             <motion.div
-                                key={quest}
+                                key={header.id}
                                 whileHover={{ y: -5 }}
                                 className="bg-gray-800/50 rounded-xl border border-cyan-500/20 p-6 hover:border-cyan-500/40 transition-all duration-300"
                             >
                                 <div className="flex items-center justify-between mb-4">
-                                    <h3 className="text-lg font-semibold text-cyan-300">Side Quest {quest}</h3>
-                                    <span className="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-xs">
-                                        100 pts
+                                    <h3 className="text-lg font-semibold text-cyan-300">Side Quest {header.id}</h3>
+                                    <span className="bg-purple-50/20 text-purple-300 px-3 py-1 rounded-full text-xs">
+                                        {header.lines.reduce((total, l) => total + (Number(l.points) || 0), 0)} pts
                                     </span>
                                 </div>
                                 <p className="text-gray-300 text-sm mb-4">
-                                    Complete this side quest to earn points and unlock special rewards.
+                                    {header.question}
                                 </p>
-                                <Button className="w-full bg-gradient-to-r from-cyan-60 to-purple-600 hover:from-cyan-700 hover:to-purple-700">
+                                <Button
+                                    className="w-full bg-gradient-to-r from-cyan-900 to-purple-600 hover:from-cyan-700 hover:to-purple-700 text-white"
+                                    onClick={() => handleStartQuest(header.id)}
+                                >
                                     Start Quest
                                 </Button>
                             </motion.div>
