@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\SideQuestHeader;
 use App\Models\SideQuestLine;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class SideQuestController extends Controller
@@ -23,6 +24,34 @@ class SideQuestController extends Controller
         $header = SideQuestHeader::with('lines')->findOrFail($sideQuestHeader->id);
         
         return response()->json($header);
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'headers' => 'required|array',
+            'headers.*.question' => 'required|string|max:255',
+            'headers.*.lines' => 'array',
+        ]);
+
+        Log::info('Storing side quests', $data);
+        foreach ($data['headers'] as $headerData) {
+            $header = SideQuestHeader::create([
+                'question' => $headerData['question'],
+            ]);
+
+            foreach ($headerData['lines'] as $line) {
+                SideQuestLine::create([
+                    'header_id' => $header->id,
+                    'input_type' => $line['input_type'],
+                    'placeholder' => $line['placeholder'],
+                    'is_question' => $line['is_question'],
+                    'validation_rule' => $line['validation_rule'],
+                ]);
+            }
+        }
+
+        return response()->json(['message' => 'Side quests saved successfully!'], 201);
     }
 
     public function storeHeader(Request $request)

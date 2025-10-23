@@ -1,0 +1,10 @@
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api/v1";
+
+export const API_ENDPOINTS = {
+  LOGIN: `${API_BASE_URL}/login`,
+ REGISTER: `${API_BASE_URL}/register`,
+  USERS: `${API_BASE_URL}/users`,
+  POST_SIDE_QUESTS: `${API_BASE_URL}/admin/side-quest`,
+};
+
+export default API_ENDPOINTS;

@@ -11,18 +11,17 @@ class SideQuestLine extends Model
 
     protected $fillable = [
         'header_id',
-        'input',
+        'input_type',
         'placeholder',
         'is_question',
         'answer',
         'validation_rule',
-        'order',
+        'points',
     ];
 
     protected $casts = [
         'header_id' => 'integer',
         'is_question' => 'boolean',
-        'order' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('side_quest_lines', function (Blueprint $table) {
             $table->id();
             $table->foreignId('header_id')->constrained('side_quest_headers')->onDelete('cascade');
-            $table->string('input');
+            $table->string('input_type');
             $table->string('placeholder')->nullable();
             $table->boolean('is_question')->default(false);
             $table->string('answer')->nullable();
             $table->string('validation_rule')->nullable();
-            $table->integer('order')->default(0);
+            $table->integer('points')->default(10);
             $table->timestamps();
         });
     }
