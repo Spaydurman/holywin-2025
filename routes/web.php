@@ -48,5 +48,14 @@ Route::get('/keep-alive', function () {
     }
 });
 
+// Game routes
+Route::prefix('game')->group(function () {
+    Route::get('login', [\App\Http\Controllers\GameAuthController::class, 'showLoginForm'])->name('game.login');
+    Route::post('login', [\App\Http\Controllers\GameAuthController::class, 'login']);
+    Route::post('logout', [\App\Http\Controllers\GameAuthController::class, 'logout'])->name('game.logout');
+    
+    Route::get('side-quest', [\App\Http\Controllers\GameAuthController::class, 'showSideQuest'])->name('game.side-quest')->middleware('game.auth');
+});
+
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
