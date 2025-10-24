@@ -142,14 +142,20 @@ class SideQuestController extends Controller
 
     public function validateSideQuest(Request $request)
     {
+        Log::info('Validating side quest', $request->all());
         $request->validate([
             'header_id' => 'required|exists:side_quest_headers,id',
             'inputs' => 'required|array',
-            'inputs.*' => 'required|string'
+            'inputs.*.value' => 'required|string',
+            'inputs.*.validation_rule' => 'required|string',
+            'inputs.*.input_type' => 'required|string',
+            'inputs.*.placeholder' => 'required|string',
+            'inputs.*.is_question' => 'required|boolean',
+            'inputs.*.points' => 'required|integer'
         ]);
 
         $header = SideQuestHeader::with('lines')->findOrFail($request->header_id);
-        $inputs = $request->inputs;
+        $inputObjects = $request->inputs;
         $gameUser = session('game_user');
 
         if (!$gameUser) {
@@ -160,8 +166,9 @@ class SideQuestController extends Controller
         $validationErrors = [];
 
         foreach ($header->lines as $index => $line) {
-            $inputValue = $inputs[$index] ?? null;
-            $validationRule = $line->validation_rule;
+            $inputObject = $inputObjects[$index] ?? null;
+            $inputValue = $inputObject ? $inputObject['value'] : null;
+            $validationRule = $inputObject ? $inputObject['validation_rule'] : $line->validation_rule;
             $isValid = true;
             $errorMessage = null;
 
@@ -216,9 +223,10 @@ class SideQuestController extends Controller
                     // Check if the inputted birthday is correct based on other input
                     // This validation would typically require a reference to another input field
                     // For now, we'll assume it's validated against the registration table
-                    $nameIndex = $header->lines->search($line) - 1; // Previous input should be name
+                    $nameIndex = $index - 1; // Previous input should be name
                     if ($nameIndex >= 0) {
-                        $nameValue = $inputs[$nameIndex] ?? null;
+                        $nameInputObject = $inputObjects[$nameIndex] ?? null;
+                        $nameValue = $nameInputObject ? $nameInputObject['value'] : null;
                         if ($nameValue) {
                             $registration = \App\Models\Registration::where('name', $nameValue)->first();
                             if ($registration && $registration->birthday) {
@@ -245,9 +253,10 @@ class SideQuestController extends Controller
                     $errorMessage = 'This field is required';
                 } else {
                     // Check if the user has the same birthday month as the name inputted
-                    $nameIndex = $header->lines->search($line) - 1; // Previous input should be name
+                    $nameIndex = $index - 1; // Previous input should be name
                     if ($nameIndex >= 0) {
-                        $nameValue = $inputs[$nameIndex] ?? null;
+                        $nameInputObject = $inputObjects[$nameIndex] ?? null;
+                        $nameValue = $nameInputObject ? $nameInputObject['value'] : null;
                         if ($nameValue) {
                             $registration = \App\Models\Registration::where('name', $nameValue)->first();
                             if ($registration && $registration->birthday) {
@@ -281,7 +290,8 @@ class SideQuestController extends Controller
                 'line_id' => $line->id,
                 'is_valid' => $isValid,
                 'error_message' => $errorMessage,
-                'validation_rule' => $validationRule
+                'validation_rule' => $validationRule,
+                'input_value' => $inputValue
             ];
 
             if (!$isValid) {

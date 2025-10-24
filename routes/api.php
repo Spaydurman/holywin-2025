@@ -24,6 +24,5 @@ Route::prefix('v1')->group(function () {
         Route::delete('side-quest-lines/{line}', [SideQuestController::class, 'destroyLine']);
 
         Route::post('side-quest', [SideQuestController::class, 'store']);
-        Route::post('side-quest-validate', [SideQuestController::class, 'validateSideQuest']);
     });
 });

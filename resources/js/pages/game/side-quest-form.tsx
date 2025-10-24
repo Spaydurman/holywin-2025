@@ -9,12 +9,14 @@ import UidDisplay from '@/components/ui/uid-display';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { router } from '@inertiajs/react';
+import { API_ENDPOINTS } from '@/config';
 
 interface SideQuestLine {
     id: number;
     input_type: string;
     placeholder: string;
     is_question: boolean;
+    answer: string;
     validation_rule: string;
     points: number;
 }
@@ -69,14 +71,30 @@ export default function GameSideQuestForm({ header, game_user }: GameSideQuestFo
         setSuccessMessage(null);
 
         try {
-            const response = await axios.post('/api/v1/admin/side-quest-validate', {
+            // Check for empty inputs before submitting
+            const newErrors = inputs.map(input => input.trim() ? '' : 'This field is required');
+            const hasEmptyInputs = newErrors.some(error => error !== '');
+            if (hasEmptyInputs) {
+                setErrors(newErrors);
+                return;
+            }
+            
+            const response = await axios.post(API_ENDPOINTS.VALIDATE_SIDE_QUEST, {
                 header_id: header.id,
-                inputs: inputs
+                inputs: inputs.map((input, index) => ({
+                    value: input,
+                    input_type: header.lines[index].input_type,
+                    placeholder: header.lines[index].placeholder,
+                    is_question: header.lines[index].is_question,
+                    answer: header.lines[index].answer,
+                    validation_rule: header.lines[index].validation_rule,
+                    points: header.lines[index].points
+                })),
+                user: game_user
             });
 
             if (response.data.success) {
                 setSuccessMessage('Side quest completed successfully!');
-                // Optionally redirect back to side quest list after a delay
                 setTimeout(() => {
                     router.get('/game/side-quest');
                 }, 2000);
@@ -157,7 +175,7 @@ export default function GameSideQuestForm({ header, game_user }: GameSideQuestFo
                                     <div key={line.id} className="space-y-2">
                                         <Label htmlFor={`input-${index}`} className="text-gray-300">
                                             {line.placeholder || `Input ${index + 1}`}
-                                            {line.validation_rule === 'required' && <span className="text-red-400 ml-1">*</span>}
+                                            <span className="text-red-400 ml-1">*</span> {/* All fields are required */}
                                         </Label>
                                         <Input
                                             id={`input-${index}`}
@@ -166,10 +184,10 @@ export default function GameSideQuestForm({ header, game_user }: GameSideQuestFo
                                             value={inputs[index] || ''}
                                             onChange={(e) => handleInputChange(index, e.target.value)}
                                             className="bg-gray-800/50 border-cyan-500/30 text-white placeholder-gray-400"
-                                            required={line.validation_rule === 'required'}
+                                            // required={true} // Make all inputs required
                                         />
                                         {errors[index] && (
-                                            <p className="text-red-400 text-sm">{errors[index]}</p>
+                                            <p className="text-red-400 text-sm mt-1">{errors[index]}</p>
                                         )}
                                     </div>
                                 ))}
