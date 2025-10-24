@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import UidDisplay from '@/components/ui/uid-display';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { router } from '@inertiajs/react';
@@ -126,9 +127,9 @@ export default function GameSideQuestForm({ header, game_user }: GameSideQuestFo
                             Side Quest: {header.question}
                         </h1>
                         <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-                            <div className="bg-gray-800/50 px-4 py-2 rounded-lg border border-cyan-500/30 w-full sm:w-auto">
+                            <div className="bg-gray-800/50 px-4 py-2 rounded-lg border-cyan-500/30 w-full sm:w-auto">
                                 <span className="text-cyan-300 text-sm">UID: </span>
-                                <span className="text-white font-mono break-all">{game_user?.uid}</span>
+                                <UidDisplay uid={game_user?.uid} className="text-white font-mono break-all" />
                             </div>
                             <Button
                                 onClick={handleLogout}

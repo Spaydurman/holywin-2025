@@ -3,6 +3,7 @@ import GameLayout from '@/layouts/game-layout';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import UidDisplay from '@/components/ui/uid-display';
 import { router } from '@inertiajs/react';
 
 interface SideQuestLine {
@@ -61,9 +62,9 @@ export default function GameSideQuest({ game_user, headers }: GameSideQuestProps
                             Game Side Quest Portal
                         </h1>
                         <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-                            <div className="bg-gray-800/50 px-4 py-2 rounded-lg border border-cyan-500/30 w-full sm:w-auto">
+                            <div className="bg-gray-800/50 px-4 py-2 rounded-lg border-cyan-500/30 w-full sm:w-auto">
                                 <span className="text-cyan-300 text-sm">UID: </span>
-                                <span className="text-white font-mono break-all">{game_user?.uid}</span>
+                                <UidDisplay uid={game_user?.uid} className="text-white font-mono break-all" />
                             </div>
                             <Button
                                 onClick={handleLogout}
@@ -108,7 +109,7 @@ export default function GameSideQuest({ game_user, headers }: GameSideQuestProps
                                     <div className="space-y-3">
                                         <div>
                                             <p className="text-gray-400 text-sm">UID</p>
-                                            <p className="text-white font-mono">{game_user?.uid}</p>
+                                            <UidDisplay uid={game_user?.uid} className="text-white font-mono" />
                                         </div>
                                         <div>
                                             <p className="text-gray-400 text-sm">Status</p>
