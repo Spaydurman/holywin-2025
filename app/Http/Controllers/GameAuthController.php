@@ -57,15 +57,19 @@ class GameAuthController extends Controller
         if (!session()->has('game_user')) {
             return redirect()->route('game.login');
         }
-
+        
         $gameUser = session('game_user');
         
         // Get all side quest headers with their lines
         $headers = \App\Models\SideQuestHeader::with('lines')->get();
         
+        // Calculate total points for the user
+        $totalPoints = \App\Models\UserSideQuestPoint::where('uid', $gameUser['uid'])->sum('points');
+        
         return inertia('game/side-quest', [
             'game_user' => $gameUser,
-            'headers' => $headers
+            'headers' => $headers,
+            'total_points' => $totalPoints
         ]);
     }
 

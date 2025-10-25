@@ -22,7 +22,7 @@ class SideQuestSeeder extends Seeder
                         'input_type' => 'text',
                         'placeholder' => 'Enter Name',
                         'is_question' => false,
-                        'validation_rule' => 'validate_if_name_exist',
+                        'validation_rule' => 'validate_if_name_exist_same_inviter',
                         'points' => 10
                     ],
                     [
@@ -93,7 +93,7 @@ class SideQuestSeeder extends Seeder
                         'input_type' => 'text',
                         'placeholder' => 'Enter Name',
                         'is_question' => false,
-                        'validation_rule' => 'validate_if_name_exist',
+                        'validation_rule' => 'validate_if_name_exist_same_inviter',
                         'points' => 15
                     ]
                 ]
@@ -105,7 +105,7 @@ class SideQuestSeeder extends Seeder
                         'input_type' => 'text',
                         'placeholder' => 'Enter Name (Registered Name)',
                         'is_question' => false,
-                        'validation_rule' => 'validate_same_bday',
+                        'validation_rule' => 'validate_if_name_exist_same_inviter',
                         'points' => 15
                     ]
                 ]
@@ -155,7 +155,7 @@ class SideQuestSeeder extends Seeder
                         'input_type' => 'text',
                         'placeholder' => 'Enter Name',
                         'is_question' => false,
-                        'validation_rule' => 'validate_if_name_exist',
+                        'validation_rule' => 'validate_if_name_exist_same_inviter',
                         'points' => 15
                     ],
                     [
@@ -198,7 +198,7 @@ class SideQuestSeeder extends Seeder
                         'input_type' => 'text',
                         'placeholder' => 'Enter Name',
                         'is_question' => false,
-                        'validation_rule' => 'validate_if_name_exist',
+                        'validation_rule' => 'validate_if_name_exist_same_inviter',
                         'points' => 15
                     ]
                 ]

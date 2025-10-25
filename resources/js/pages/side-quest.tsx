@@ -49,11 +49,12 @@ const inputTypes = [
 ];
 
 const validationRules = [
- { label: "None", value: null },
   { label: "Required", value: "required" },
-  { label: "Validate if same invited by", value: "validate_if_same_invited_by" },
+  { label: "Validate if name exist", value: "validate_if_name_exist" },
+  { label: "Validate if name exist and same inviter", value: "validate_if_name_exist_same_inviter" },
   { label: "Validate code", value: "validate_code" },
-  { label: "Validate unique", value: "unique" },
+  { label: "Validate same bday", value: "validate_same_bday" },
+  { label: "Validate if birthday is correct", value: 'validate_if_bday_is_correct' },
 ];
 
 export default function SideQuest() {

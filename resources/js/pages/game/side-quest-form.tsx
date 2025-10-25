@@ -72,7 +72,7 @@ export default function GameSideQuestForm({ header, game_user }: GameSideQuestFo
 
         try {
             // Check for empty inputs before submitting
-            const newErrors = inputs.map(input => input.trim() ? '' : 'This field is required');
+            const newErrors = inputs.map(input => input.trim() ? '' : 'You should input something here');
             const hasEmptyInputs = newErrors.some(error => error !== '');
             if (hasEmptyInputs) {
                 setErrors(newErrors);
@@ -100,18 +100,23 @@ export default function GameSideQuestForm({ header, game_user }: GameSideQuestFo
                 }, 2000);
             } else {
                 const newErrors = new Array(header.lines.length).fill('');
-                response.data.results.forEach((result: any, index: number) => {
+                response.data.results.forEach((result: any) => {
                     if (!result.is_valid) {
-                        newErrors[index] = result.error_message;
+                        // Find the index of the line with this line_id
+                        const lineIndex = header.lines.findIndex(line => line.id === result.line_id);
+                        if (lineIndex !== -1) {
+                            newErrors[lineIndex] = result.error_message;
+                        }
                     }
                 });
                 setErrors(newErrors);
             }
         } catch (error: any) {
-            console.error('Error validating side quest:', error);
+            // console.error('Error validating side quest:', error);
             if (error.response && error.response.data && error.response.data.errors) {
                 const newErrors = new Array(header.lines.length).fill('');
                 error.response.data.errors.forEach((errMsg: string, index: number) => {
+                    console.log(errMsg);
                     if (index < newErrors.length) {
                         newErrors[index] = errMsg;
                     }
@@ -141,8 +146,8 @@ export default function GameSideQuestForm({ header, game_user }: GameSideQuestFo
                     className="max-w-4xl mx-auto"
                 >
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-                        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-cyan-40 to-purple-500 bg-clip-text text-transparent">
-                            Side Quest: {header.question}
+                        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-cyan-900 to-purple-500 bg-clip-text text-transparent">
+                            Side Quest: #{header.id}
                         </h1>
                         <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
                             <div className="bg-gray-800/50 px-4 py-2 rounded-lg border-cyan-500/30 w-full sm:w-auto">
@@ -204,7 +209,7 @@ export default function GameSideQuestForm({ header, game_user }: GameSideQuestFo
                                     <Button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="w-full sm:w-auto bg-gradient-to-r from-cyan-60 to-purple-600 hover:from-cyan-700 hover:to-purple-700"
+                                        className="w-full sm:w-auto bg-gradient-to-r from-cyan-400 to-purple-600 hover:from-cyan-700 hover:to-purple-700"
                                     >
                                         {isSubmitting ? 'Validating...' : 'Submit Quest'}
                                     </Button>

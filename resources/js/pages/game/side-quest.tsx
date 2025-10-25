@@ -34,9 +34,10 @@ interface GameSideQuestProps {
         mobile_number?: string;
     };
     headers: SideQuestHeader[];
+    total_points?: number;
 }
 
-export default function GameSideQuest({ game_user, headers }: GameSideQuestProps) {
+export default function GameSideQuest({ game_user, headers, total_points }: GameSideQuestProps) {
     const handleLogout = () => {
         router.post('/game/logout');
     };
@@ -117,7 +118,7 @@ export default function GameSideQuest({ game_user, headers }: GameSideQuestProps
                                         </div>
                                         <div>
                                             <p className="text-gray-400 text-sm">Points</p>
-                                            <p className="text-white">0</p>
+                                            <p className="text-white">{total_points || 0}</p>
                                         </div>
                                     </div>
                                 </div>

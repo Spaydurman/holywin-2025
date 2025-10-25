@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Registration;
 use App\Models\SideQuestHeader;
 use App\Models\SideQuestLine;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -172,53 +174,75 @@ class SideQuestController extends Controller
             $isValid = true;
             $errorMessage = null;
 
-            if ($validationRule === 'required' && empty($inputValue)) {
-                $isValid = false;
-                $errorMessage = 'This field is required';
+            if ($validationRule === 'required') {
+                if (empty($inputValue)) {
+                    $isValid = false;
+                    $errorMessage = 'Oops! You forgot to fill this one. Don\'t leave me hanging!';
+                } else if($inputValue === $line->answer) {
+                    $isValid = true;
+                } else {
+                    $isValid = false;
+                    $errorMessage = 'Hmm, that doesn\'t seem quite right. Try again!';
+                }
             } elseif ($validationRule === 'validate_if_same_invited_by') {
                 if (empty($inputValue)) {
                     $isValid = false;
-                    $errorMessage = 'This field is required';
+                    $errorMessage = 'Oops! You forgot to fill this one. Don\'t leave me hanging!';
                 } else {
                     // Check if the input name is the same as invited_by using uid
                     $isValid = $inputValue === $gameUser['invited_by'];
                     if (!$isValid) {
-                        $errorMessage = 'The name must match your invited by field';
+                        $errorMessage = 'This name doesn\'t match who invited you!';
                     }
                 }
             } elseif ($validationRule === 'validate_code') {
                 if (empty($inputValue)) {
                     $isValid = false;
-                    $errorMessage = 'This field is required';
+                    $errorMessage = 'Oops! You forgot to fill this one. Don\'t leave me hanging!';
                 } else {
                     // Check if the input is a valid UID or existing UID
-                    $isValid = \App\Models\Registration::where('uid', $inputValue)->exists();
+                    $isValid = Registration::where('uid', $inputValue)->exists();
                     if (!$isValid) {
-                        $errorMessage = 'Invalid UID code';
+                        $errorMessage = 'That UID doesn\'t ring a bell. Are you sure it\'s correct?';
                     }
                 }
             } elseif ($validationRule === 'validate_if_name_exist') {
                 if (empty($inputValue)) {
                     $isValid = false;
-                    $errorMessage = 'This field is required';
+                    $errorMessage = 'Oops! You forgot to fill this one. Don\'t leave me hanging!';
                 } else {
                     // Check if the name exists in the registration table and invited_by is not the same as user
-                    $registration = \App\Models\Registration::where('name', $inputValue)->first();
+                    $registration = Registration::where('name', $inputValue)->first();
                     if (!$registration) {
                         $isValid = false;
-                        $errorMessage = 'Name does not exist in the registration table';
+                        $errorMessage = 'Hmm, I can\'t find that name. Maybe check the spelling?';
                     } elseif ($registration->name === $gameUser['name']) {
                         $isValid = false;
-                        $errorMessage = 'You cannot use your own name';
+                        $errorMessage = 'Nice try! But you can\'t use your own name here.';
+                    }
+                }
+            } elseif ($validationRule === 'validate_if_name_exist_same_inviter') {
+                if (empty($inputValue)) {
+                    $isValid = false;
+                    $errorMessage = 'Oops! You forgot to fill this one. Don\'t leave me hanging!';
+                } else {
+                    // Check if the name exists in the registration table and invited_by is not the same as user
+                    $registration = Registration::where('name', $inputValue)->first();
+                    if (!$registration) {
+                        $isValid = false;
+                        $errorMessage = 'Hmm, I can\'t find that name. Maybe check the spelling?';
+                    } elseif ($registration->name === $gameUser['name']) {
+                        $isValid = false;
+                        $errorMessage = 'Nice try! But you can\'t use your own name here.';
                     } elseif ($registration->invited_by === $gameUser['invited_by']) {
                         $isValid = false;
-                        $errorMessage = 'The invited by field is the same as yours';
+                        $errorMessage = 'That person was invited by the same person as you';
                     }
                 }
             } elseif ($validationRule === 'validate_if_bday_is_correct') {
                 if (empty($inputValue)) {
                     $isValid = false;
-                    $errorMessage = 'This field is required';
+                    $errorMessage = 'Oops! You forgot to fill this one. Don\'t leave me hanging!';
                 } else {
                     // Check if the inputted birthday is correct based on other input
                     // This validation would typically require a reference to another input field
@@ -228,29 +252,29 @@ class SideQuestController extends Controller
                         $nameInputObject = $inputObjects[$nameIndex] ?? null;
                         $nameValue = $nameInputObject ? $nameInputObject['value'] : null;
                         if ($nameValue) {
-                            $registration = \App\Models\Registration::where('name', $nameValue)->first();
+                            $registration = Registration::where('name', $nameValue)->first();
                             if ($registration && $registration->birthday) {
                                 $isValid = $inputValue === $registration->birthday->format('Y-m-d');
                                 if (!$isValid) {
-                                    $errorMessage = 'Birthday does not match the registered birthday';
+                                    $errorMessage = 'That birthday doesn\'t match what we have on file!';
                                 }
                             } else {
                                 $isValid = false;
-                                $errorMessage = 'Could not find birthday for the given name';
+                                $errorMessage = 'Sorry, couldn\'t find a birthday for that name!';
                             }
                         } else {
                             $isValid = false;
-                            $errorMessage = 'No name provided to validate birthday against';
+                            $errorMessage = 'I need a name first before I can check the birthday!';
                         }
                     } else {
                         $isValid = false;
-                        $errorMessage = 'Cannot validate birthday without a name';
+                        $errorMessage = 'A name is needed to validate the birthday, my friend!';
                     }
                 }
             } elseif ($validationRule === 'validate_same_bday') {
                 if (empty($inputValue)) {
                     $isValid = false;
-                    $errorMessage = 'This field is required';
+                    $errorMessage = 'Oops! You forgot to fill this one. Don\'t leave me hanging!';
                 } else {
                     // Check if the user has the same birthday month as the name inputted
                     $nameIndex = $index - 1; // Previous input should be name
@@ -258,29 +282,29 @@ class SideQuestController extends Controller
                         $nameInputObject = $inputObjects[$nameIndex] ?? null;
                         $nameValue = $nameInputObject ? $nameInputObject['value'] : null;
                         if ($nameValue) {
-                            $registration = \App\Models\Registration::where('name', $nameValue)->first();
+                            $registration = Registration::where('name', $nameValue)->first();
                             if ($registration && $registration->birthday) {
-                                $inputBirthday = \Carbon\Carbon::parse($inputValue);
-                                $userBirthday = \Carbon\Carbon::parse($gameUser['birthday']);
+                                $inputBirthday = Carbon::parse($inputValue);
+                                $userBirthday = Carbon::parse($gameUser['birthday']);
                                 $isValid = $inputBirthday->month === $userBirthday->month;
                                 if (!$isValid) {
-                                    $errorMessage = 'The birthday month does not match your birthday month';
+                                    $errorMessage = 'This person doesn\'t share your birthday month!';
                                 }
                             } else {
                                 $isValid = false;
-                                $errorMessage = 'Could not find birthday for the given name';
+                                $errorMessage = 'Sorry, couldn\'t find a birthday for that name!';
                             }
                         } else {
                             $isValid = false;
-                            $errorMessage = 'No name provided to validate birthday month against';
+                            $errorMessage = 'I need a name first before I can check the birthday month!';
                         }
                     } else {
                         // If there's no previous name field, check if the input matches the user's birthday month
-                        $userBirthday = \Carbon\Carbon::parse($gameUser['birthday']);
-                        $inputBirthday = \Carbon\Carbon::parse($inputValue);
+                        $userBirthday = Carbon::parse($gameUser['birthday']);
+                        $inputBirthday = Carbon::parse($inputValue);
                         $isValid = $inputBirthday->month === $userBirthday->month;
                         if (!$isValid) {
-                            $errorMessage = 'The birthday month does not match your birthday month';
+                            $errorMessage = 'This birthday month doesn\'t match yours!';
                         }
                     }
                 }
@@ -293,18 +317,43 @@ class SideQuestController extends Controller
                 'validation_rule' => $validationRule,
                 'input_value' => $inputValue
             ];
-
             if (!$isValid) {
                 $validationErrors[] = $errorMessage;
+            } else {
+                $validationErrors[] = null;
             }
         }
 
-        $allValid = count($validationErrors) === 0;
+        $allValid = count(array_filter($validationErrors, fn($v) => !is_null($v))) === 0;
+
+        // If all validations pass, save the points to the user's account
+        if ($allValid) {
+            // Calculate total points for this side quest
+            $totalPoints = 0;
+            foreach ($header->lines as $index => $line) {
+                $inputObject = $inputObjects[$index] ?? null;
+                if ($inputObject) {
+                    $totalPoints += (int) $inputObject['points'];
+                }
+            }
+
+            // Save the points to the user's account
+            \App\Models\UserSideQuestPoint::updateOrCreate(
+                [
+                    'uid' => $gameUser['uid'],
+                    'side_quest_header_id' => $header->id,
+                ],
+                [
+                    'points' => $totalPoints,
+                ]
+            );
+        }
 
         return response()->json([
             'success' => $allValid,
             'results' => $results,
-            'errors' => $validationErrors
+            'errors' => $validationErrors,
+            'total_points' => $allValid ? $totalPoints : 0
         ], $allValid ? 200 : 422);
     }
 }
