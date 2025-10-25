@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Registration;
 use App\Models\SideQuestHeader;
 use App\Models\SideQuestLine;
+use App\Models\UserSideQuestPoint;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Cache;
 
 class SideQuestController extends Controller
 {
@@ -338,7 +340,7 @@ class SideQuestController extends Controller
             }
 
             // Save the points to the user's account
-            \App\Models\UserSideQuestPoint::updateOrCreate(
+            UserSideQuestPoint::updateOrCreate(
                 [
                     'uid' => $gameUser['uid'],
                     'side_quest_header_id' => $header->id,
@@ -347,6 +349,10 @@ class SideQuestController extends Controller
                     'points' => $totalPoints,
                 ]
             );
+            
+            // Clear the cache for this user's completed side quests so it refreshes on the next visit
+            $cacheKey = 'completed_side_quests_' . $gameUser['uid'];
+            Cache::forget($cacheKey);
         }
 
         return response()->json([

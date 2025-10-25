@@ -35,13 +35,14 @@ interface GameSideQuestProps {
     };
     headers: SideQuestHeader[];
     total_points?: number;
+    completed_side_quest_ids?: number[];
 }
 
-export default function GameSideQuest({ game_user, headers, total_points }: GameSideQuestProps) {
+export default function GameSideQuest({ game_user, headers, total_points, completed_side_quest_ids = [] }: GameSideQuestProps) {
     const handleLogout = () => {
         router.post('/game/logout');
     };
-
+    console.log(completed_side_quest_ids);
     const handleStartQuest = (headerId: number) => {
         // Redirect to the form for the specific quest
         router.get(`/game/side-quest/form/${headerId}`);
@@ -127,29 +128,35 @@ export default function GameSideQuest({ game_user, headers, total_points }: Game
                     </Card>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {headers.map((header) => (
-                            <motion.div
-                                key={header.id}
-                                whileHover={{ y: -5 }}
-                                className="bg-gray-800/50 rounded-xl border border-cyan-500/20 p-6 hover:border-cyan-500/40 transition-all duration-300"
-                            >
-                                <div className="flex items-center justify-between mb-4">
-                                    <h3 className="text-lg font-semibold text-cyan-300">Side Quest {header.id}</h3>
-                                    <span className="bg-purple-50/20 text-purple-300 px-3 py-1 rounded-full text-xs">
-                                        {header.lines.reduce((total, l) => total + (Number(l.points) || 0), 0)} pts
-                                    </span>
-                                </div>
-                                <p className="text-gray-300 text-sm mb-4">
-                                    {header.question}
-                                </p>
-                                <Button
-                                    className="w-full bg-gradient-to-r from-cyan-900 to-purple-600 hover:from-cyan-700 hover:to-purple-700 text-white"
-                                    onClick={() => handleStartQuest(header.id)}
+                        {headers.map((header) => {
+                            const isCompleted = completed_side_quest_ids.includes(header.id);
+                            return (
+                                <motion.div
+                                    key={header.id}
+                                    whileHover={{ y: -5 }}
+                                    className={`bg-gray-800/50 rounded-xl border border-cyan-500/20 p-6 hover:border-cyan-500/40 transition-all duration-300 ${isCompleted ? 'opacity-70' : ''}`}
                                 >
-                                    Start Quest
-                                </Button>
-                            </motion.div>
-                        ))}
+                                    <div className="flex items-center justify-between mb-4">
+                                        <h3 className="text-lg font-semibold text-cyan-300">Side Quest {header.id}</h3>
+                                        <span className="bg-purple-50/20 text-purple-300 px-3 py-1 rounded-full text-xs">
+                                            {header.lines.reduce((total, l) => total + (Number(l.points) || 0), 0)} pts
+                                        </span>
+                                    </div>
+                                    <p className="text-gray-300 text-sm mb-4">
+                                        {header.question}
+                                    </p>
+                                    <Button
+                                        className={`w-full ${isCompleted
+                                            ? 'bg-gradient-to-r from-gray-600 to-gray-700 cursor-not-allowed'
+                                            : 'bg-gradient-to-r from-cyan-900 to-purple-600 hover:from-cyan-700 hover:to-purple-700'} text-white`}
+                                        onClick={() => !isCompleted && handleStartQuest(header.id)}
+                                        disabled={isCompleted}
+                                    >
+                                        {isCompleted ? 'Completed' : 'Start Quest'}
+                                    </Button>
+                                </motion.div>
+                            );
+                        })}
                     </div>
                 </motion.div>
                 

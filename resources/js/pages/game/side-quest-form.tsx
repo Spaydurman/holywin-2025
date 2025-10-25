@@ -95,8 +95,13 @@ export default function GameSideQuestForm({ header, game_user }: GameSideQuestFo
 
             if (response.data.success) {
                 setSuccessMessage('Side quest completed successfully!');
+                // Redirect immediately to the side quest page to reflect the updated status
                 setTimeout(() => {
-                    router.get('/game/side-quest');
+                    router.visit('/game/side-quest', {
+                        method: 'get',
+                        preserveState: false,
+                        preserveScroll: false,
+                    });
                 }, 2000);
             } else {
                 const newErrors = new Array(header.lines.length).fill('');
