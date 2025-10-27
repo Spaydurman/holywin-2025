@@ -112,6 +112,20 @@ class GameAuthController extends Controller
         ]);
     }
 
+    public function showLeaderboard()
+    {
+        // Check if user is authenticated for game
+        if (!session()->has('game_user')) {
+            return redirect()->route('game.login');
+        }
+        
+        $gameUser = session('game_user');
+        
+        return inertia('game/leaderboard', [
+            'game_user' => $gameUser
+        ]);
+    }
+
     public function isAuthenticated()
     {
         return session()->has('game_user');

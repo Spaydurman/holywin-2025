@@ -25,4 +25,7 @@ Route::prefix('v1')->group(function () {
 
         Route::post('side-quest', [SideQuestController::class, 'store']);
     });
+    
+    // Leaderboard route (outside admin group)
+    Route::get('leaderboard', [SideQuestController::class, 'getLeaderboard']);
 });

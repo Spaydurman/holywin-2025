@@ -379,4 +379,19 @@ class SideQuestController extends Controller
             'total_points' => $allValid ? $totalPoints : 0
         ], $allValid ? 200 : 422);
     }
+    
+    public function getLeaderboard()
+    {
+        // Get total points for each user by summing their points from UserSideQuestPoint
+        $leaderboard = UserSideQuestPoint::join('registrations', 'user_side_quest_points.uid', '=', 'registrations.uid')
+            ->select(
+                'registrations.name',
+                \DB::raw('SUM(user_side_quest_points.points) as total_points')
+            )
+            ->groupBy('registrations.uid', 'registrations.name')
+            ->orderBy('total_points', 'DESC')
+            ->get();
+
+        return response()->json($leaderboard);
+    }
 }
