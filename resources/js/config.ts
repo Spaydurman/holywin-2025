@@ -5,6 +5,8 @@ export const API_ENDPOINTS = {
   REGISTER: `${API_BASE_URL}/register`,
   USERS: `${API_BASE_URL}/users`,
   POST_SIDE_QUESTS: `${API_BASE_URL}/admin/side-quest`,
+  SIDE_QUEST_HEADERS: `${API_BASE_URL}/admin/side-quest-headers`,
+  SIDE_QUEST_LINES: `${API_BASE_URL}/admin/side-quest-lines`,
   VALIDATE_SIDE_QUEST: '/game/side-quest/validate',  // Updated to use web route with game auth
 };
 

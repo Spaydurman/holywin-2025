@@ -14,7 +14,7 @@ use \App\Http\Controllers\SideQuestController;
 
 Route::prefix('v1')->group(function () {
     Route::prefix('admin')->group(function () {
-        Route::get('side-quest-headers', [SideQuestController::class, 'index']);
+        Route::get('side-quest-headers', [SideQuestController::class, 'indexHeaders']);
         Route::post('side-quest-headers', [SideQuestController::class, 'storeHeader']);
         Route::put('side-quest-headers/{header}', [SideQuestController::class, 'updateHeader']);
         Route::delete('side-quest-headers/{header}', [SideQuestController::class, 'destroyHeader']);

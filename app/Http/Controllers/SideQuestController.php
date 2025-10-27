@@ -22,6 +22,23 @@ class SideQuestController extends Controller
             'headers' => $headers,
         ]);
     }
+
+    public function indexHeaders()
+    {
+        $page = request()->get('page', 1);
+        $perPage = request()->get('per_page', 10);
+        $search = request()->get('search', '');
+        
+        $query = SideQuestHeader::with('lines');
+        
+        if (!empty($search)) {
+            $query->where('question', 'like', '%' . $search . '%');
+        }
+        
+        $headers = $query->paginate($perPage, ['*'], 'page', $page);
+        
+        return response()->json($headers);
+    }
     
     public function show(SideQuestHeader $sideQuestHeader)
     {

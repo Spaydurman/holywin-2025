@@ -27,7 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // Side Quest API routes
     Route::prefix('admin')->group(function () {
-        Route::get('side-quest-headers', [\App\Http\Controllers\SideQuestController::class, 'index']);
+        Route::get('side-quest-headers', [\App\Http\Controllers\SideQuestController::class, 'indexHeaders']);
         Route::post('side-quest-headers', [\App\Http\Controllers\SideQuestController::class, 'storeHeader']);
         Route::put('side-quest-headers/{header}', [\App\Http\Controllers\SideQuestController::class, 'updateHeader']);
         Route::delete('side-quest-headers/{header}', [\App\Http\Controllers\SideQuestController::class, 'destroyHeader']);
