@@ -18,6 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->trustProxies(at: '*');
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
+        
+        $middleware->alias([
+            'game.auth' => \App\Http\Middleware\EnsureGameUser::class,
+        ]);
 
         $middleware->web(append: [
             HandleAppearance::class,

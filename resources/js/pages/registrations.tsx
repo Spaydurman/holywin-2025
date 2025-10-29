@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
+import UidDisplay from '@/components/ui/uid-display';
 import { type BreadcrumbItem } from '@/types';
 
 
@@ -184,7 +185,7 @@ const RegistrationsPage = () => {
                     <TableCell>{registration.invited_by || '-'}</TableCell>
                     <TableCell>{registration.mobile_number || '-'}</TableCell>
                     <TableCell>{registration.salvationist === 'yes' ? 'Yes' : 'No'}</TableCell>
-                    <TableCell>{registration.uid || '-'}</TableCell>
+                    <TableCell><UidDisplay uid={registration.uid} /></TableCell>
                     <TableCell>{formatDate(registration.created_at)}</TableCell>
                     </TableRow>
                 ))
