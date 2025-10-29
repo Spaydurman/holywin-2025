@@ -68,6 +68,7 @@ class SideQuestController extends Controller
                     'placeholder' => $line['placeholder'],
                     'is_question' => $line['is_question'],
                     'validation_rule' => $line['validation_rule'],
+                    'answer' => $line['answer'] ?? null,
                 ]);
             }
         }

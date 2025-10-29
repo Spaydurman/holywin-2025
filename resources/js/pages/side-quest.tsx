@@ -27,15 +27,15 @@ type ValidationRule =
   | "validate_if_same_invited_by"
   | "validate_code"
   | "unique"
- | null;
+  | null;
 
 interface Line {
   id: number;
- input_type: string;
- placeholder: string;
+  input_type: string;
+  placeholder: string;
   is_question: boolean;
   answer: string;
- validation_rule: ValidationRule;
+  validation_rule: ValidationRule;
   points: number;
 }
 
@@ -130,8 +130,8 @@ export default function SideQuest() {
                   placeholder: "",
                   is_question: false,
                   answer: "",
-                  validation_rule: null,
-                  points: 0,
+                  validation_rule: 'required',
+                  points: 10,
                 },
               ],
             }
