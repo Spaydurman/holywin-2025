@@ -40,7 +40,7 @@ class SideQuestSeeder extends Seeder
                     [
                         'input_type' => 'text',
                         'placeholder' => 'Ate Sweet Code',
-                        'is_question' => 'true',
+                        'is_question' => true,
                         'validation_rule' => 'required',
                         'answer' => 'SWEET2025',
                         'points' => 30
