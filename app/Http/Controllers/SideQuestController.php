@@ -298,7 +298,7 @@ class SideQuestController extends Controller
                         if ($nameValue) {
                             $registration = Registration::where('name', $nameValue)->first();
                             if ($registration && $registration->birthday) {
-                                $inputBirthday = Carbon::parse($inputValue);
+                                $inputBirthday = Carbon::parse($registration->birthday);
                                 $userBirthday = Carbon::parse($gameUser['birthday']);
                                 $isValid = $inputBirthday->month === $userBirthday->month;
                                 if (!$isValid) {
