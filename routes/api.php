@@ -11,7 +11,7 @@ use \App\Http\Controllers\SideQuestController;
     Route::get('/registrations/export', [RegistrationController::class, 'exportExcel'])->name('api.registrations.export');
     Route::post('/registrations/generate-uids', [RegistrationController::class, 'generateUids'])->name('api.registrations.generate-uids');
     Route::get('/registrations/uid/{uid}', [RegistrationController::class, 'getByUid'])->name('api.registrations.get-by-uid');
-    Route::put('/registrations/{id}/attendance', [RegistrationController::class, 'updateAttendance'])->name('api.registrations.update-attendance');
+    Route::post('/registrations/attendance', [RegistrationController::class, 'updateAttendance'])->name('api.registrations.update-attendance');
 
 Route::prefix('v1')->group(function () {
     Route::prefix('admin')->group(function () {
@@ -19,14 +19,14 @@ Route::prefix('v1')->group(function () {
         Route::post('side-quest-headers', [SideQuestController::class, 'storeHeader']);
         Route::put('side-quest-headers/{header}', [SideQuestController::class, 'updateHeader']);
         Route::delete('side-quest-headers/{header}', [SideQuestController::class, 'destroyHeader']);
-        
+
         Route::post('side-quest-lines', [SideQuestController::class, 'storeLine']);
         Route::put('side-quest-lines/{line}', [SideQuestController::class, 'updateLine']);
         Route::delete('side-quest-lines/{line}', [SideQuestController::class, 'destroyLine']);
 
         Route::post('side-quest', [SideQuestController::class, 'store']);
     });
-    
+
     // Leaderboard route (outside admin group)
     Route::get('leaderboard', [SideQuestController::class, 'getLeaderboard']);
 });

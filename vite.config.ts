@@ -7,12 +7,12 @@ import { defineConfig } from 'vite';
 export default defineConfig({
     server: {
         host: '0.0.0.0',
-        port: 5173,
-        hmr: {
-        protocol: 'ws',
-        host: '192.168.1.6', // 👈 Your LAN IP here (no localhost, no 0.0.0.0)
-        port: 5173,
-        },
+        port: 1030,
+        // hmr: {
+        // protocol: 'ws',
+        // host: '192.168.1.6', // 👈 Your LAN IP here (no localhost, no 0.0.0.0)
+        // port: 5173,
+        // },
     },
     plugins: [
         laravel({

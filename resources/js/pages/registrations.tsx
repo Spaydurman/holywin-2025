@@ -124,11 +124,12 @@ const RegistrationsPage = () => {
   const handleConfirmRegistration = async () => {
     if (!selectedRegistration) return;
 
+    console.log(API_ENDPOINTS.UPDATE_ATTENDANCE());
     setIsRegistering(true);
     try {
-      const response = await axios.put(
-        API_ENDPOINTS.UPDATE_ATTENDANCE(selectedRegistration.id),
-        {},
+      const response = await axios.post(
+        API_ENDPOINTS.UPDATE_ATTENDANCE(),
+        { id: selectedRegistration.id },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -320,7 +321,7 @@ const RegistrationsPage = () => {
         )}
         </CardContent>
       </Card>
-      
+
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -348,16 +349,16 @@ const RegistrationsPage = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      
+
       </div>
     </AppLayout>
   );
-  
+
   async function handleGenerateUids() {
     if (!confirm('This will generate UIDs for all registrations that don\'t have one. Continue?')) {
       return;
     }
-    
+
     setGeneratingUids(true);
     try {
       const response = await fetch(
@@ -370,9 +371,9 @@ const RegistrationsPage = () => {
           },
         }
       );
-      
+
       const result = await response.json();
-      
+
       if (response.ok) {
         alert(result.message);
         fetchRegistrations();
@@ -386,7 +387,7 @@ const RegistrationsPage = () => {
       setGeneratingUids(false);
     }
  }
-  
+
   async function handleExportExcel() {
     try {
       window.open(registrationsAPI.export().url, '_blank');
