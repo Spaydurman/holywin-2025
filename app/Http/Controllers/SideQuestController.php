@@ -194,7 +194,7 @@ class SideQuestController extends Controller
                     $isValid = true;
                 } else if ($line->is_question === false ) {
                     $isValid = true;
-                }fi else {
+                } else {
                     $isValid = false;
                     $errorMessage = 'Hmm, that doesn\'t seem quite right. Try again!';
                 }
