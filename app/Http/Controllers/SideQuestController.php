@@ -17,7 +17,7 @@ class SideQuestController extends Controller
     public function index()
     {
         $headers = SideQuestHeader::with('lines')->get();
-        
+
         return Inertia::render('SideQuest', [
             'headers' => $headers,
         ]);
@@ -28,22 +28,22 @@ class SideQuestController extends Controller
         $page = request()->get('page', 1);
         $perPage = request()->get('per_page', 10);
         $search = request()->get('search', '');
-        
+
         $query = SideQuestHeader::with('lines');
-        
+
         if (!empty($search)) {
             $query->where('question', 'like', '%' . $search . '%');
         }
-        
+
         $headers = $query->paginate($perPage, ['*'], 'page', $page);
-        
+
         return response()->json($headers);
     }
-    
+
     public function show(SideQuestHeader $sideQuestHeader)
     {
         $header = SideQuestHeader::with('lines')->findOrFail($sideQuestHeader->id);
-        
+
         return response()->json($header);
     }
 
@@ -134,14 +134,6 @@ class SideQuestController extends Controller
 
     public function updateLine(Request $request, SideQuestLine $line)
     {
-        $request->validate([
-            'header_id' => 'required|exists:side_quest_headers,id',
-            'input' => 'required|string|max:255',
-            'placeholder' => 'nullable|string|max:255',
-            'is_question' => 'boolean',
-            'validation_rule' => 'nullable|string|max:255',
-            'order' => 'integer',
-        ]);
 
         $line->update([
             'header_id' => $request->header_id,
@@ -200,7 +192,9 @@ class SideQuestController extends Controller
                     $errorMessage = 'Oops! You forgot to fill this one. Don\'t leave me hanging!';
                 } else if($inputValue === $line->answer) {
                     $isValid = true;
-                } else {
+                } else if ($line->is_question === false ) {
+                    $isValid = true;
+                }fi else {
                     $isValid = false;
                     $errorMessage = 'Hmm, that doesn\'t seem quite right. Try again!';
                 }
@@ -367,7 +361,7 @@ class SideQuestController extends Controller
                     'points' => $totalPoints,
                 ]
             );
-            
+
             // Clear the cache for this user's completed side quests so it refreshes on the next visit
             $cacheKey = 'completed_side_quests_' . $gameUser['uid'];
             Cache::forget($cacheKey);
@@ -380,7 +374,7 @@ class SideQuestController extends Controller
             'total_points' => $allValid ? $totalPoints : 0
         ], $allValid ? 200 : 422);
     }
-    
+
     public function getLeaderboard()
     {
         // Get total points for each user by summing their points from UserSideQuestPoint
