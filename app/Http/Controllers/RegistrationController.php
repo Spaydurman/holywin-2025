@@ -242,4 +242,25 @@ class RegistrationController extends Controller
         // Return the file as a download response
         return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
     }
+    
+    public function updateAttendance(Request $request, int $id): JsonResponse
+    {
+        $registration = Registration::findOrFail($id);
+        
+        // Update the attendance status
+        $registration->is_attended = true;
+        $registration->save();
+        
+        // Add 100 points with header id 0 to the user_side_quest_points table
+        \App\Models\UserSideQuestPoint::create([
+            'uid' => $registration->uid,
+            'side_quest_header_id' => 0,
+            'points' => 100,
+        ]);
+        
+        return response()->json([
+            'message' => 'Attendance updated and points awarded successfully',
+            'data' => $registration
+        ]);
+    }
 }

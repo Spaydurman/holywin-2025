@@ -11,6 +11,16 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Skeleton } from '@/components/ui/skeleton';
 import UidDisplay from '@/components/ui/uid-display';
 import { type BreadcrumbItem } from '@/types';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import axios from 'axios';
+import { API_ENDPOINTS } from '@/config';
 
 
 interface Pagination {
@@ -33,6 +43,7 @@ interface Registration {
   mobile_number: string | null;
   uid: string | null;
   created_at: string;
+  is_attended: boolean | number;
 }
 
 interface RegistrationsResponse {
@@ -48,6 +59,9 @@ const RegistrationsPage = () => {
   const [perPage, setPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
  const [generatingUids, setGeneratingUids] = useState(false);
+ const [isModalOpen, setIsModalOpen] = useState(false);
+ const [selectedRegistration, setSelectedRegistration] = useState<Registration | null>(null);
+ const [isRegistering, setIsRegistering] = useState(false);
 
   const fetchRegistrations = async () => {
     setLoading(true);
@@ -102,6 +116,46 @@ const RegistrationsPage = () => {
       },
   ];
 
+  const handleRegisterClick = (registration: Registration) => {
+    setSelectedRegistration(registration);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmRegistration = async () => {
+    if (!selectedRegistration) return;
+
+    setIsRegistering(true);
+    try {
+      const response = await axios.put(
+        API_ENDPOINTS.UPDATE_ATTENDANCE(selectedRegistration.id),
+        {},
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        alert('Registration successful! 100 points have been added.');
+        setIsModalOpen(false);
+        fetchRegistrations(); // Refresh the data
+      } else {
+        alert('Error: ' + (response.data.message || 'Failed to register'));
+      }
+    } catch (error) {
+      console.error('Error registering:', error);
+      if (axios.isAxiosError(error)) {
+        alert('Error: ' + (error.response?.data?.message || 'Failed to register'));
+      } else {
+        alert('Error: Failed to register');
+      }
+    } finally {
+      setIsRegistering(false);
+    }
+  };
+
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Registrations" />
@@ -153,6 +207,7 @@ const RegistrationsPage = () => {
             <Table>
             <TableHeader>
                 <TableRow>
+                <TableHead>Actions</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Birthday</TableHead>
@@ -167,7 +222,7 @@ const RegistrationsPage = () => {
             <TableBody>
                 {loading ? (
                 <TableRow>
-                    <TableCell colSpan={8}>
+                    <TableCell colSpan={10}>
                     <div className="flex flex-col gap-2">
                         {[...Array(5)].map((_, i) => (
                         <Skeleton key={i} className="h-12 w-full" />
@@ -178,6 +233,16 @@ const RegistrationsPage = () => {
                 ) : registrationsData.length > 0 ? (
                 registrationsData.map((registration) => (
                     <TableRow key={registration.id}>
+                    <TableCell>
+                      <Button
+                        onClick={() => handleRegisterClick(registration)}
+                        variant="outline"
+                        size="sm"
+                        disabled={registration.is_attended == 1}
+                      >
+                        {registration.is_attended == 1 ? 'Attended' : 'Register'}
+                      </Button>
+                    </TableCell>
                     <TableCell className="font-medium">{registration.name}</TableCell>
                     <TableCell>{registration.email}</TableCell>
                     <TableCell>{formatDate(registration.birthday)}</TableCell>
@@ -191,7 +256,7 @@ const RegistrationsPage = () => {
                 ))
                 ) : (
                 <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8">
+                    <TableCell colSpan={10} className="text-center py-8">
                     No registrations found
                     </TableCell>
                 </TableRow>
@@ -255,6 +320,35 @@ const RegistrationsPage = () => {
         )}
         </CardContent>
       </Card>
+      
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Confirm Registration</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to register {selectedRegistration?.name}? This will mark the user as attended and award 100 points.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-start">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsModalOpen(false)}
+              disabled={isRegistering}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              onClick={handleConfirmRegistration}
+              disabled={isRegistering}
+            >
+              {isRegistering ? 'Registering...' : 'Confirm Registration'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
       </div>
     </AppLayout>
   );

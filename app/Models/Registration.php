@@ -42,10 +42,12 @@ class Registration extends Model
         'salvationist',
         'mobile_number',
         'uid',
+        'is_attended',
     ];
 
     protected $casts = [
         'birthday' => 'date',
         'salvationist' => 'string',
+        'is_attended' => 'boolean',
     ];
 }
